@@ -1,1 +1,44 @@
-1
+
+{
+  "movies": [
+    {
+      "id": 1,
+      "title": "The Beekeeper",
+      "year": 2025,
+      "genre": "Action",
+      "img": "https://image.tmdb.org/t/p/w200/A7ezFmB0m9PSTp6R61v6YI0uORr.jpg",
+      "type": "movie",
+      "video_url": "https://seuservidor.com/video.mp4"
+    },
+    {
+      "id": 2,
+      "title": "Dune: Part Two",
+      "year": 2024,
+      "genre": "Sci-Fi",
+      "img": "https://image.tmdb.org/t/p/w200/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg",
+      "type": "movie",
+      "video_url": "https://seuservidor.com/dune2.mp4"
+    },
+    {
+      "id": 3,
+      "title": "One Piece",
+      "year": 2023,
+      "genre": "Anime",
+      "img": "https://image.tmdb.org/t/p/w200/cMD9Ygz11yjJnz1QyMUmQnz2QKV.jpg",
+      "type": "series",
+      "video_url": "https://seuservidor.com/onepiece.mp4"
+    }
+  ],
+  "series": [
+    {
+      "id": 101,
+      "title": "Stranger Things",
+      "year": 2022,
+      "genre": "Sci-Fi",
+      "img": "https://image.tmdb.org/t/p/w200/49WJfeN0moxb9IPfGN8LkuCLQdx.jpg",
+      "type": "series",
+      "seasons": 4,
+      "episodes": 34
+    }
+  ]
+}
