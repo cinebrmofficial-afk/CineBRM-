@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-pt">
 <head>
@@ -7,1548 +6,866 @@
     <title>BRM Pro Max</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --bg: #000; --accent: #00f2ff; --card: #111; --gray: #888; --gold: #ffd700; }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
-        body { background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; overflow-x: hidden; padding-bottom: 80px; }
+        :root { --bg: #000; --accent: #00f2ff; --card: #111; --gray: #888; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg); color: white; font-family: sans-serif; margin: 0; padding-bottom: 80px; overflow-x: hidden; }
 
-        /* HEADER */
-        header { 
-            position: fixed; 
-            top: 0; 
-            width: 100%; 
-            z-index: 1000; 
-            display: flex; 
-            align-items: center; 
-            padding: 10px 15px; 
-            background: linear-gradient(to bottom, rgba(0,0,0,0.95), transparent);
-        }
-        .logo-img { 
-            height: 42px; 
-            filter: drop-shadow(0 0 8px var(--accent));
-            margin-right: 12px;
-        }
-        .search-box { 
-            flex: 1; 
-            background: rgba(255,255,255,0.1); 
-            border-radius: 25px; 
-            padding: 10px 15px; 
-            display: flex; 
-            align-items: center;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        .search-box input { 
-            background: none; 
-            border: none; 
-            color: white; 
-            width: 100%; 
-            outline: none;
-            font-size: 14px;
-        }
+        /* HEADER - SÓ APARECE NA HOME */
+        header { position: fixed; top: 0; width: 100%; z-index: 1000; display: none; align-items: center; padding: 10px 15px; background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent); backdrop-filter: blur(5px); }
+        header.active { display: flex; }
+        .logo-img { height: 42px; margin-right: 12px; filter: drop-shadow(0 0 5px var(--accent)); }
+        .search-box { flex: 1; background: rgba(255,255,255,0.1); border-radius: 20px; padding: 7px 15px; display: flex; align-items: center; }
+        .search-box input { background: none; border: none; color: white; width: 100%; outline: none; }
 
         /* PAGES */
-        .page { display: none; min-height: 100vh; }
-        .page.active { display: block; animation: fadeIn 0.4s; }
+        .page { display: none; animation: fadeIn 0.4s; min-height: 100vh; }
+        .page.active { display: block; }
 
-        /* ========== HOME ========== */
-        #p-home { padding-top: 70px; }
-        
-        .hero-slider {
-            position: relative;
-            width: 100%;
-            height: 85vh;
-            overflow: hidden;
-        }
-        .hero-slide {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-size: cover;
-            background-position: center;
-            opacity: 0;
-            transition: opacity 1s ease;
-        }
-        .hero-slide.active { opacity: 1; }
-        .hero-slide::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 70%;
-            background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.3) 50%, transparent 100%);
-        }
-        .hero-info {
-            position: absolute;
-            bottom: 80px;
-            left: 20px;
-            right: 20px;
-            z-index: 10;
-        }
-        .hero-title {
-            font-size: 32px;
-            font-weight: bold;
-            margin-bottom: 8px;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.8);
-        }
-        .hero-meta {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            font-size: 14px;
-            color: rgba(255,255,255,0.8);
-        }
-        .hero-year {
-            background: var(--accent);
-            color: #000;
-            padding: 4px 12px;
-            border-radius: 4px;
-            font-weight: bold;
-            font-size: 12px;
-        }
-        .hero-badge {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        
-        .slider-dots {
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 8px;
-            z-index: 20;
-        }
-        .dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.3);
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .dot.active {
-            background: var(--accent);
-            width: 24px;
-            border-radius: 4px;
-        }
+        /* HOME */
+        .hero { width: 100%; height: 500px; background-size: cover; background-position: center; display: flex; align-items: flex-end; padding: 40px 20px; cursor: pointer; }
+        .info-box { background: rgba(0,0,0,0.4); backdrop-filter: blur(10px); padding: 15px; border-radius: 4px; border-left: 3px solid var(--accent); }
+        .cat-title { padding: 20px 15px 5px; color: var(--accent); font-weight: bold; font-size: 14px; }
+        .scroll-row { display: flex; overflow-x: auto; gap: 10px; padding: 0 15px; }
+        .scroll-row::-webkit-scrollbar { display: none; }
+        .movie-card { min-width: 115px; height: 165px; background: var(--card); border-radius: 8px; border: 1px solid #222; flex-shrink: 0; position: relative; background-size: cover; background-position: center; cursor: pointer; transition: transform 0.2s; }
+        .movie-card:active { transform: scale(0.95); }
 
-        /* CATEGORIAS */
-        .categories-section { padding: 20px 0; }
-        .cat-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 15px 10px;
-        }
-        .cat-name {
-            color: var(--accent);
-            font-weight: bold;
-            font-size: 16px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .cat-more {
-            color: var(--gray);
-            font-size: 12px;
-            cursor: pointer;
-        }
-        .movies-row {
-            display: flex;
-            overflow-x: auto;
-            gap: 12px;
-            padding: 0 15px 20px;
-            scroll-snap-type: x mandatory;
-        }
-        .movies-row::-webkit-scrollbar { display: none; }
-        .movie-card {
-            min-width: 140px;
-            height: 200px;
-            border-radius: 12px;
-            overflow: hidden;
-            position: relative;
-            scroll-snap-align: start;
-            cursor: pointer;
-            border: 1px solid #222;
-        }
-        .movie-card img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .movie-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 10px;
-            background: linear-gradient(transparent, rgba(0,0,0,0.9));
-        }
-        .movie-title {
-            font-size: 11px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .movie-rating {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            background: rgba(0,0,0,0.7);
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 10px;
-            color: var(--gold);
-        }
+        /* DOWNLOADS */
+        .profile-box { display: flex; align-items: center; padding: 80px 20px 20px; }
+        .avatar { width: 60px; height: 60px; border-radius: 50%; background: #222; margin-right: 15px; border: 2px solid var(--accent); }
+        .premium-card { background: #0f0f0f; margin: 0 15px; padding: 15px; border-radius: 12px; border: 1px solid #1a1a1a; }
+        .dl-item { background: #080808; margin: 15px; padding: 15px; border-radius: 10px; border: 1px solid #1a1a1a; }
+        .progress-bar { height: 4px; background: #222; width: 100%; margin: 10px 0; border-radius: 2px; }
+        .progress-fill { height: 100%; background: var(--accent); width: 12%; box-shadow: 0 0 8px var(--accent); }
+        .folder-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; padding: 15px; }
+        .folder-item { background: #111; padding: 15px; border-radius: 8px; text-align: center; font-size: 11px; border: 1px solid #222; cursor: pointer; }
+        .folder-item:active { transform: scale(0.95); }
 
-        /* ========== DOWNLOADS ========== */
-        #p-dl { padding-top: 70px; }
-        
-        .dl-header {
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .dl-header h2 {
-            font-size: 20px;
-        }
-        .dl-count-badge {
-            background: var(--accent);
-            color: #000;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        .ad-banner {
-            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
-            padding: 15px;
-            border-radius: 12px;
-            text-align: center;
-            margin: 0 15px 20px;
-            display: none;
-        }
-        .ad-banner.show { display: block; }
-
-        /* PASTAS DE DOWNLOAD */
-        .folder-section {
-            margin: 0 15px 20px;
-        }
-        .folder-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-        }
-        .folder-item {
-            background: #111;
-            padding: 20px 15px;
-            border-radius: 12px;
-            text-align: center;
-            border: 1px solid #222;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .folder-item:active {
-            transform: scale(0.95);
-            background: #1a1a1a;
-        }
-        .folder-item i {
-            font-size: 28px;
-            color: var(--accent);
-            margin-bottom: 10px;
-            display: block;
-        }
-        .folder-name {
-            font-size: 12px;
-            margin-bottom: 5px;
-        }
-        .folder-count {
-            font-size: 10px;
-            color: var(--gray);
-        }
-
-        /* VIEW DE PASTA */
-        .folder-view {
-            display: none;
-            padding: 70px 15px 20px;
-            min-height: 100vh;
-        }
-        .folder-view.active {
-            display: block;
-        }
-        .folder-view-header {
-            display: flex;
-            align-items: center;
-            padding: 15px 0;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #222;
-        }
-        .folder-view-header i {
-            margin-right: 15px;
-            color: var(--accent);
-            cursor: pointer;
-            font-size: 20px;
-        }
-        .folder-view-header h3 {
-            font-size: 18px;
-        }
-
-        .file-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-        }
-        .file-item {
-            background: #111;
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid #222;
-            cursor: pointer;
-            position: relative;
-        }
-        .file-thumb {
-            width: 100%;
-            height: 140px;
-            background: #222;
-            position: relative;
-        }
-        .file-thumb.video::after {
-            content: '\f04b';
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 40px;
-            color: var(--accent);
-            opacity: 0.8;
-        }
-        .file-thumb img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .file-info {
-            padding: 10px;
-        }
-        .file-name {
-            font-size: 11px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            margin-bottom: 5px;
-        }
-        .file-meta {
-            font-size: 10px;
-            color: var(--gray);
-            display: flex;
-            justify-content: space-between;
-        }
-        .file-badge {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            background: var(--accent);
-            color: #000;
-            padding: 3px 8px;
-            border-radius: 10px;
-            font-size: 9px;
-            font-weight: bold;
-        }
-
-        /* LISTA DE DOWNLOADS ATIVOS */
-        .active-downloads-list {
-            margin: 20px 15px;
-        }
-        .download-item {
-            background: #111;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 15px;
-            border: 1px solid #222;
-        }
-        .dl-movie-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 15px;
-        }
-        .dl-movie-title {
-            font-size: 16px;
-            font-weight: bold;
-        }
-        .dl-quality {
-            color: var(--accent);
-            font-size: 12px;
-            margin-top: 5px;
-        }
-        .dl-status {
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: bold;
-        }
-        .status-no-internet { background: rgba(255,0,0,0.1); color: #ff4444; }
-        .status-paused { background: rgba(255,170,0,0.1); color: #ffaa00; }
-        .status-waiting { background: rgba(136,136,136,0.1); color: var(--gray); }
-        .status-downloading { background: rgba(0,242,255,0.1); color: var(--accent); }
-        .status-completed { background: rgba(0,255,136,0.1); color: #00ff88; }
-
-        .dl-progress-section {
-            margin-bottom: 15px;
-        }
-        .dl-progress-info {
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-            color: var(--gray);
-            margin-bottom: 8px;
-        }
-        .dl-progress-bar {
-            height: 6px;
-            background: #222;
-            border-radius: 3px;
-            overflow: hidden;
-        }
-        .dl-progress-fill {
-            height: 100%;
-            background: var(--accent);
-            border-radius: 3px;
-            transition: width 0.3s;
-            box-shadow: 0 0 10px var(--accent);
-        }
-        .dl-actions {
-            display: flex;
-            gap: 10px;
-        }
-        .dl-btn {
-            flex: 1;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid #333;
-            background: transparent;
-            color: white;
-            font-size: 12px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .dl-btn.primary {
-            background: var(--accent);
-            color: #000;
-            border-color: var(--accent);
-            font-weight: bold;
-        }
-
-        /* ========== PREMIUM ========== */
-        #p-premium { padding-top: 70px; }
-        
-        .premium-hero {
-            text-align: center;
-            padding: 40px 20px;
-            background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
-            margin: 0 15px 20px;
-            border-radius: 20px;
-            border: 1px solid var(--gold);
-        }
-        .premium-crown {
-            font-size: 60px;
-            margin-bottom: 20px;
-            filter: drop-shadow(0 0 20px rgba(255,215,0,0.3));
-        }
-        .premium-price {
-            font-size: 48px;
-            font-weight: bold;
-            color: var(--gold);
-            margin: 20px 0;
-        }
-        .premium-price span {
-            font-size: 16px;
-            color: var(--gray);
-        }
-
-        /* CHECK-IN */
-        .checkin-section {
-            margin: 0 15px 20px;
-            background: #111;
-            padding: 20px;
-            border-radius: 16px;
-            border: 1px solid #222;
-        }
-        .section-title {
-            font-size: 16px;
-            margin-bottom: 15px;
-            color: var(--gold);
-        }
-        .checkin-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 8px;
-        }
-        .checkin-day {
-            background: #1a1a1a;
-            padding: 10px 5px;
-            border-radius: 8px;
-            text-align: center;
-            border: 1px solid #333;
-        }
-        .checkin-day.active {
-            background: rgba(0,242,255,0.1);
-            border-color: var(--accent);
-        }
-        .checkin-day.claimed {
-            background: rgba(0,255,136,0.1);
-            border-color: #00ff88;
-        }
-        .checkin-stars {
-            color: var(--gold);
-            font-size: 14px;
-            display: block;
-            margin-bottom: 5px;
-        }
-        .checkin-label {
-            font-size: 9px;
-            color: var(--gray);
-        }
-
-        /* TASKS */
-        .tasks-section {
-            margin: 0 15px 20px;
-            background: #111;
-            padding: 20px;
-            border-radius: 16px;
-            border: 1px solid #222;
-        }
-        .task-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 15px;
-            background: #1a1a1a;
-            margin-bottom: 10px;
-            border-radius: 12px;
-            border: 1px solid #333;
-        }
-        .task-info h4 {
-            font-size: 13px;
-            margin-bottom: 5px;
-        }
-        .task-progress {
-            font-size: 11px;
-            color: var(--gray);
-        }
-        .task-reward {
-            color: var(--gold);
-            font-size: 12px;
-            margin-top: 5px;
-        }
-        .task-btn {
-            background: var(--accent);
-            color: #000;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .task-btn:disabled {
-            background: #333;
-            color: var(--gray);
-        }
-        .task-btn.completed {
-            background: #00ff88;
-        }
-
-        /* BENEFITS */
-        .benefits-list {
-            margin: 0 15px 20px;
-            background: #111;
-            padding: 20px;
-            border-radius: 16px;
-            border: 1px solid #222;
-        }
-        .benefit-item {
-            display: flex;
-            align-items: center;
-            padding: 15px 0;
-            border-bottom: 1px solid #222;
-        }
-        .benefit-item:last-child { border-bottom: none; }
-        .benefit-item i {
-            color: var(--gold);
-            margin-right: 15px;
-            font-size: 20px;
-        }
-        .benefit-text h4 {
-            font-size: 14px;
-            margin-bottom: 3px;
-        }
-        .benefit-text p {
-            font-size: 12px;
-            color: var(--gray);
-        }
-
-        .subscribe-btn {
-            margin: 0 15px 20px;
-            width: calc(100% - 30px);
-            padding: 18px;
-            background: linear-gradient(135deg, var(--gold), #ffaa00);
-            color: #000;
-            border: none;
-            border-radius: 30px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        /* ========== ME ========== */
-        #p-me { padding-top: 70px; }
-        
-        .me-header {
-            padding: 30px 20px;
-            text-align: center;
-            background: linear-gradient(135deg, #0a0a0a 0%, #151515 100%);
-            margin: 0 15px 20px;
-            border-radius: 20px;
-            border: 1px solid #222;
-        }
-        .me-avatar {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent), #0088cc);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 40px;
-            margin: 0 auto 15px;
-            border: 4px solid rgba(255,255,255,0.1);
-        }
-        .me-name {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        .me-id {
-            color: var(--gray);
-            font-size: 12px;
-        }
-
-        .me-menu {
-            margin: 0 15px;
-        }
-        .me-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 18px 20px;
-            background: #111;
-            margin-bottom: 10px;
-            border-radius: 12px;
-            border: 1px solid #222;
-            cursor: pointer;
-        }
-        .me-item:active {
-            background: #1a1a1a;
-        }
-        .me-item-left {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        .me-icon {
-            width: 40px;
-            height: 40px;
-            background: rgba(0,242,255,0.1);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--accent);
-        }
-        .me-text h4 {
-            font-size: 14px;
-            margin-bottom: 3px;
-        }
-        .me-text p {
-            font-size: 11px;
-            color: var(--gray);
-        }
-        .switch {
-            width: 50px;
-            height: 26px;
-            background: #333;
-            border-radius: 13px;
-            position: relative;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .switch.active {
-            background: var(--accent);
-        }
-        .switch::after {
-            content: '';
-            position: absolute;
-            top: 3px;
-            left: 3px;
-            width: 20px;
-            height: 20px;
-            background: white;
-            border-radius: 50%;
-            transition: all 0.3s;
-        }
-        .switch.active::after {
-            left: 27px;
-        }
-
-        .me-footer {
-            text-align: center;
-            padding: 30px;
-            color: var(--accent);
-            font-weight: bold;
-        }
+        /* ME PAGE */
+        .me-header { padding: 80px 20px 10px; }
+        .me-list { padding: 20px; line-height: 3; }
+        .me-item { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #111; cursor: pointer; padding: 15px 0; }
+        .switch { width: 40px; height: 20px; background: #333; border-radius: 10px; position: relative; cursor: pointer; transition: 0.3s; flex-shrink: 0; margin-left: 10px; }
+        .switch.active { background: var(--accent); }
+        .switch::after { content: ''; position: absolute; left: 2px; top: 2px; width: 16px; height: 16px; background: white; border-radius: 50%; transition: 0.3s; }
+        .switch.active::after { left: 22px; }
 
         /* PLAYER */
-        #player {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            z-index: 3000;
-            display: none;
-            flex-direction: column;
+        #player { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 3000; display: none; flex-direction: column; }
+        .video-area { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; }
+        .controls { padding: 25px; background: #0a0a0a; border-radius: 20px 20px 0 0; }
+
+        /* NAVBAR */
+        nav { position: fixed; bottom: 0; width: 100%; height: 75px; background: #000; border-top: 1px solid #222; display: flex; justify-content: space-around; align-items: center; z-index: 2000; }
+        .nav-link { text-align: center; font-size: 10px; color: #555; cursor: pointer; }
+        .nav-link.active { color: var(--accent); }
+        .nav-link i { font-size: 22px; display: block; margin-bottom: 4px; }
+
+        /* SUB PAGES - AGORA SÃO PÁGINAS INDEPENDENTES */
+        .sub-page { display: none; animation: fadeIn 0.4s; min-height: 100vh; padding-bottom: 80px; }
+        .sub-page.active { display: block; }
+        .page-header { display: flex; align-items: center; padding: 60px 15px 15px; border-bottom: 1px solid #222; background: var(--bg); position: sticky; top: 0; z-index: 100; }
+        .page-header i { margin-right: 15px; color: var(--accent); cursor: pointer; font-size: 20px; }
+        .page-header h2 { margin: 0; font-size: 18px; }
+
+        /* LIST STYLES */
+        .content-list { padding: 15px; }
+        .list-item { 
+            display: flex; 
+            align-items: center; 
+            padding: 15px; 
+            background: #111; 
+            margin-bottom: 10px; 
+            border-radius: 10px; 
+            border: 1px solid #222;
+            cursor: pointer;
+            transition: 0.2s;
         }
-        .player-header {
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .list-item:active { background: #1a1a1a; }
+        .list-thumb { 
+            width: 80px; 
+            height: 120px; 
+            background: #222; 
+            border-radius: 6px; 
+            margin-right: 15px; 
+            background-size: cover;
+            background-position: center;
+            flex-shrink: 0;
         }
-        .video-area {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .list-info { flex: 1; }
+        .list-title { font-size: 14px; margin-bottom: 5px; font-weight: bold; }
+        .list-meta { font-size: 11px; color: var(--gray); }
+        .list-action { color: var(--accent); font-size: 18px; padding: 10px; }
+
+        /* COMMENTS */
+        .comment-item { 
+            background: #111; 
+            padding: 15px; 
+            border-radius: 10px; 
+            margin-bottom: 10px; 
+            border: 1px solid #222;
         }
-        .play-btn-large {
-            font-size: 80px;
-            color: var(--accent);
+        .comment-header { display: flex; justify-content: space-between; margin-bottom: 10px; align-items: center; }
+        .comment-user { font-weight: bold; color: var(--accent); }
+        .comment-date { font-size: 10px; color: var(--gray); }
+        .comment-text { font-size: 13px; line-height: 1.5; color: #ccc; }
+        .comment-movie { font-size: 11px; color: var(--accent); margin-top: 8px; }
+
+        /* PREMIUM PAGE */
+        .premium-hero { text-align: center; padding: 100px 20px 40px; background: linear-gradient(180deg, rgba(0,242,255,0.1) 0%, transparent 100%); }
+        .premium-hero h1 { color: var(--accent); font-size: 32px; margin-bottom: 10px; }
+        .premium-hero p { color: var(--gray); font-size: 14px; }
+        .plan-card { 
+            background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%); 
+            border: 1px solid var(--accent); 
+            border-radius: 15px; 
+            padding: 25px; 
+            margin: 15px; 
+            position: relative;
+            overflow: hidden;
+        }
+        .plan-card.popular::before {
+            content: 'POPULAR';
+            position: absolute;
+            top: 10px;
+            right: -30px;
+            background: var(--accent);
+            color: #000;
+            padding: 5px 40px;
+            font-size: 10px;
+            font-weight: bold;
+            transform: rotate(45deg);
+        }
+        .plan-name { font-size: 20px; font-weight: bold; margin-bottom: 5px; }
+        .plan-price { font-size: 32px; color: var(--accent); margin: 15px 0; }
+        .plan-price span { font-size: 14px; color: var(--gray); }
+        .plan-features { list-style: none; padding: 0; margin: 20px 0; }
+        .plan-features li { padding: 8px 0; font-size: 13px; border-bottom: 1px solid #222; }
+        .plan-features li i { color: var(--accent); margin-right: 10px; }
+        .plan-btn { 
+            width: 100%; 
+            background: var(--accent); 
+            border: none; 
+            padding: 15px; 
+            border-radius: 8px; 
+            color: #000; 
+            font-weight: bold; 
+            font-size: 16px;
             cursor: pointer;
         }
 
-        /* NAVBAR LIMPA */
-        nav {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            height: 75px;
-            background: rgba(0,0,0,0.95);
-            backdrop-filter: blur(10px);
-            border-top: 1px solid #222;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            z-index: 2000;
+        /* SEARCH - SÓ NA HOME */
+        .search-overlay { 
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: var(--bg); 
+            z-index: 2500; 
+            padding: 80px 15px 20px;
         }
-        .nav-link {
-            text-align: center;
-            font-size: 11px;
-            color: #555;
-            cursor: pointer;
-            padding: 10px;
-            transition: all 0.3s;
+        .search-overlay.active { display: block; }
+        .search-header { display: flex; align-items: center; margin-bottom: 20px; position: fixed; top: 0; left: 0; right: 0; padding: 15px; background: var(--bg); z-index: 100; }
+        .search-header input { 
+            flex: 1; 
+            background: rgba(255,255,255,0.1); 
+            border: none; 
+            padding: 12px 20px; 
+            border-radius: 25px; 
+            color: white;
+            margin-right: 10px;
         }
-        .nav-link.active {
-            color: var(--accent);
-        }
-        .nav-link i {
-            font-size: 22px;
-            display: block;
-            margin-bottom: 5px;
-        }
+        .no-results { text-align: center; padding: 60px 20px; color: var(--gray); }
+        .no-results i { font-size: 48px; margin-bottom: 15px; opacity: 0.5; }
+
+        /* FOLDER VIEWS */
+        .folder-view { display: none; padding: 80px 15px 20px; }
+        .folder-view.active { display: block; }
+        .folder-header { display: flex; align-items: center; padding: 15px; border-bottom: 1px solid #222; margin-bottom: 20px; }
+        .folder-header i { margin-right: 15px; color: var(--accent); cursor: pointer; }
+        .file-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; padding: 0 10px; }
+        .file-item { background: #111; border-radius: 12px; overflow: hidden; border: 1px solid #222; position: relative; cursor: pointer; }
+        .file-thumb { width: 100%; height: 120px; background: #222; display: flex; align-items: center; justify-content: center; font-size: 30px; color: var(--accent); }
+        .file-thumb.video { background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%); }
+        .file-thumb.video::before { content: '\f04b'; font-family: 'Font Awesome 6 Free'; font-weight: 900; font-size: 40px; color: var(--accent); opacity: 0.8; }
+        .file-info { padding: 10px; font-size: 11px; }
+        .file-name { color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 5px; }
+        .file-meta { color: var(--gray); font-size: 10px; display: flex; justify-content: space-between; }
+        .file-size { color: var(--accent); }
+        .transfer-badge { position: absolute; top: 8px; right: 8px; background: var(--accent); color: #000; padding: 3px 8px; border-radius: 10px; font-size: 9px; font-weight: bold; }
+        .transfer-badge.received { background: #00ff88; }
+        .transfer-badge.sent { background: #ffaa00; }
+        .local-file-list { padding: 0 15px; }
+        .local-file-item { display: flex; align-items: center; padding: 15px; background: #111; margin-bottom: 10px; border-radius: 10px; border: 1px solid #222; cursor: pointer; }
+        .local-file-icon { width: 50px; height: 50px; background: #222; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-size: 24px; color: var(--accent); }
+        .local-file-info { flex: 1; }
+        .local-file-name { font-size: 13px; margin-bottom: 5px; }
+        .local-file-path { font-size: 10px; color: var(--gray); }
+        #file-input { display: none; }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
-    <header>
-        <img src="https://i.ibb.co/XZpqHLfz/1000007315.jpg" class="logo-img">
-        <div class="search-box">
-            <input type="text" placeholder="Procurar filmes, séries..." id="searchInput">
-            <i class="fas fa-search" style="color:var(--accent)"></i>
-        </div>
-    </header>
-
-    <!-- ========== HOME ========== -->
-    <div id="p-home" class="page active">
-        <div class="hero-slider" id="heroSlider">
-            <div class="hero-slide active" style="background-image: url('https://image.tmdb.org/t/p/original/A7ezFmB0m9PSTp6R61v6YI0uORr.jpg');" onclick="playMovie('The Beekeeper')">
-                <div class="hero-info">
-                    <h1 class="hero-title">The Beekeeper</h1>
-                    <div class="hero-meta">
-                        <span class="hero-year">2025</span>
-                        <span class="hero-badge"><i class="fas fa-star" style="color:var(--gold)"></i> 4.5</span>
-                        <span>Action • Thriller</span>
-                    </div>
-                </div>
-            </div>
-            <div class="hero-slide" style="background-image: url('https://image.tmdb.org/t/p/original/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg');" onclick="playMovie('Avatar 3')">
-                <div class="hero-info">
-                    <h1 class="hero-title">Avatar 3</h1>
-                    <div class="hero-meta">
-                        <span class="hero-year">2026</span>
-                        <span class="hero-badge"><i class="fas fa-star" style="color:var(--gold)"></i> 4.8</span>
-                        <span>Sci-Fi • Adventure</span>
-                    </div>
-                </div>
-            </div>
-            <div class="hero-slide" style="background-image: url('https://image.tmdb.org/t/p/original/geCR7m9vZx8PZ7p2P3pODC6hqoX.jpg');" onclick="playMovie('Solo Leveling')">
-                <div class="hero-info">
-                    <h1 class="hero-title">Solo Leveling</h1>
-                    <div class="hero-meta">
-                        <span class="hero-year">2024</span>
-                        <span class="hero-badge"><i class="fas fa-star" style="color:var(--gold)"></i> 4.9</span>
-                        <span>Anime • Action</span>
-                    </div>
-                </div>
-            </div>
-            <div class="hero-slide" style="background-image: url('https://image.tmdb.org/t/p/original/1pdfLvkbY9ohJlCjQH2CZjjYVv.jpg');" onclick="playMovie('Dune: Part Two')">
-                <div class="hero-info">
-                    <h1 class="hero-title">Dune: Part Two</h1>
-                    <div class="hero-meta">
-                        <span class="hero-year">2024</span>
-                        <span class="hero-badge"><i class="fas fa-star" style="color:var(--gold)"></i> 4.7</span>
-                        <span>Sci-Fi • Epic</span>
-                    </div>
-                </div>
-            </div>
-            <div class="hero-slide" style="background-image: url('https://image.tmdb.org/t/p/original/8cdWjvZQUExUUTzyp4t6ESnRSP.jpg');" onclick="playMovie('Deadpool & Wolverine')">
-                <div class="hero-info">
-                    <h1 class="hero-title">Deadpool & Wolverine</h1>
-                    <div class="hero-meta">
-                        <span class="hero-year">2024</span>
-                        <span class="hero-badge"><i class="fas fa-star" style="color:var(--gold)"></i> 4.6</span>
-                        <span>Action • Comedy</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="slider-dots">
-                <span class="dot active" onclick="goToSlide(0)"></span>
-                <span class="dot" onclick="goToSlide(1)"></span>
-                <span class="dot" onclick="goToSlide(2)"></span>
-                <span class="dot" onclick="goToSlide(3)"></span>
-                <span class="dot" onclick="goToSlide(4)"></span>
-            </div>
-        </div>
-
-        <div class="categories-section" id="categoriesContainer"></div>
+<!-- HEADER - SÓ VISÍVEL NA HOME -->
+<header id="main-header" class="active">
+    <img src="https://i.ibb.co/XZpqHLfz/1000007315.jpg" class="logo-img">
+    <div class="search-box">
+        <input type="text" placeholder="Procurar filmes, séries..." id="searchInput" onkeyup="handleSearch(event)">
+        <i class="fas fa-search" style="color:var(--accent)"></i>
     </div>
+</header>
 
-    <!-- ========== DOWNLOADS ========== -->
-    <div id="p-dl" class="page">
+<!-- SEARCH OVERLAY - SÓ PARA CONTEÚDO DO APP -->
+<div id="search-overlay" class="search-overlay">
+    <div class="search-header">
+        <input type="text" placeholder="Procurar..." id="searchInputOverlay" onkeyup="performSearch(this.value)">
+        <i class="fas fa-times" style="color:var(--accent); font-size:20px; cursor:pointer;" onclick="closeSearch()"></i>
+    </div>
+    <div id="searchContent" style="margin-top: 80px;">
+        <div class="no-results">
+            <i class="fas fa-search"></i>
+            <p>Digite para buscar filmes, séries, dorama...</p>
+        </div>
+    </div>
+</div>
+
+<!-- HOME PAGE -->
+<div id="p-home" class="page active">
+    <div class="hero" id="heroSlide" onclick="openPlayer('The Beekeeper')">
+        <div class="info-box"><h2>The Beekeeper</h2><p>2025 Action ⬇️</p></div>
+    </div>
+    <div id="cat-list"></div>
+</div>
+
+<!-- DOWNLOADS PAGE -->
+<div id="p-dl" class="page">
+    <div id="dl-main-view">
+        <div class="profile-box"><div class="avatar"></div><div><b>Soraia Manuel</b><br><small style="color:var(--accent)">Free Plan</small></div></div>
+        <div class="premium-card">
+            <small>Obtém os teus benefícios premium</small>
+            <div style="font-size:10px; color:var(--gray)">(No ads 🍿) (720p Quality 💎) (Multi downloads 👑)</div>
+            <div style="margin-top:10px"><b>Check-in diário</b></div>
+            <div style="display:flex; gap:5px; margin:10px 0">
+                <div style="background:#222; padding:5px 10px; border-radius:4px">⭐+2</div><div style="background:#222; padding:5px 10px; border-radius:4px">⭐+2</div>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; background:#1a1a1a; padding:10px; border-radius:8px">
+                <small>Watch 30min (5/30) ⭐+1</small><button style="background:var(--accent); border:none; padding:4px 10px; border-radius:4px; font-weight:bold">Watch</button>
+            </div>
+        </div>
+        <div style="padding:20px 20px 0; display:flex; justify-content:space-between"><b>Downloads (2)</b><i class="fas fa-bars"></i></div>
+        <div class="dl-item">
+            <div style="display:flex; justify-content:space-between; font-size:12px"><span>Beekeeper 360p</span><span style="color:red">No internet</span></div>
+            <div class="progress-bar"><div class="progress-fill"></div></div>
+            <div style="display:flex; justify-content:space-between; font-size:10px; color:var(--gray)"><span>92.5MB / 858.3MB</span><span style="color:var(--accent)">Pause</span></div>
+        </div>
         
-        <!-- VIEW PRINCIPAL -->
-        <div id="dl-main-view">
-            <div class="dl-header">
-                <h2>Downloads</h2>
-                <span class="dl-count-badge" id="totalDownloads">2</span>
+        <div class="folder-grid">
+            <div class="folder-item" onclick="openBRMFolder()">
+                <i class="fas fa-folder" style="font-size:24px; color:var(--accent); margin-bottom:8px; display:block;"></i>
+                1 BRM
+                <div style="font-size:9px; color:var(--gray); margin-top:5px;" id="brm-count">3 itens</div>
             </div>
-
-            <div class="ad-banner" id="adBanner">
-                <i class="fas fa-ad"></i> Anúncio - Assine Premium para remover
+            <div class="folder-item" onclick="openLocalFolder()">
+                <i class="fas fa-mobile-alt" style="font-size:24px; color:var(--accent); margin-bottom:8px; display:block;"></i>
+                2 Local
+                <div style="font-size:9px; color:var(--gray); margin-top:5px;">Explorar</div>
             </div>
-
-            <!-- PASTAS -->
-            <div class="folder-section">
-                <div class="folder-grid">
-                    <div class="folder-item" onclick="openBRMFolder()">
-                        <i class="fas fa-folder"></i>
-                        <div class="folder-name">BRM</div>
-                        <div class="folder-count" id="brmCount">3 itens</div>
-                    </div>
-                    <div class="folder-item" onclick="openLocalFolder()">
-                        <i class="fas fa-mobile-alt"></i>
-                        <div class="folder-name">Local</div>
-                        <div class="folder-count" id="localCount">8 itens</div>
-                    </div>
-                    <div class="folder-item" onclick="openReceiveFolder()">
-                        <i class="fas fa-share-alt"></i>
-                        <div class="folder-name">Receive</div>
-                        <div class="folder-count" id="receiveCount">0 itens</div>
-                    </div>
-                </div>
+            <div class="folder-item" onclick="openReceiveFolder()">
+                <i class="fas fa-share-alt" style="font-size:24px; color:var(--accent); margin-bottom:8px; display:block;"></i>
+                3 Receive
+                <div style="font-size:9px; color:var(--gray); margin-top:5px;" id="receive-count">0 transferências</div>
             </div>
-
-            <!-- DOWNLOADS ATIVOS -->
-            <div class="active-downloads-list">
-                <h3 style="margin-bottom:15px; font-size:16px;">Em andamento</h3>
-                
-                <div class="download-item">
-                    <div class="dl-movie-header">
-                        <div>
-                            <div class="dl-movie-title">Beekeeper</div>
-                            <div class="dl-quality">360p • MP4</div>
-                        </div>
-                        <span class="dl-status status-no-internet" id="status1">No Internet</span>
-                    </div>
-                    <div class="dl-progress-section">
-                        <div class="dl-progress-info">
-                            <span>92.5 MB / 858.3 MB</span>
-                            <span id="percent1">11%</span>
-                        </div>
-                        <div class="dl-progress-bar">
-                            <div class="dl-progress-fill" id="progress1" style="width:11%"></div>
-                        </div>
-                    </div>
-                    <div class="dl-actions">
-                        <button class="dl-btn" onclick="togglePause(1)">
-                            <i class="fas fa-pause"></i> <span id="pauseText1">Pause</span>
-                        </button>
-                        <button class="dl-btn primary" onclick="resumeDownload(1)">
-                            <i class="fas fa-play"></i> Resume
-                        </button>
-                    </div>
-                </div>
-
-                <div class="download-item">
-                    <div class="dl-movie-header">
-                        <div>
-                            <div class="dl-movie-title">Solo Leveling EP1</div>
-                            <div class="dl-quality">720p • MKV</div>
-                        </div>
-                        <span class="dl-status status-waiting" id="status2">Waiting</span>
-                    </div>
-                    <div class="dl-progress-section">
-                        <div class="dl-progress-info">
-                            <span>0 MB / 450.2 MB</span>
-                            <span id="percent2">0%</span>
-                        </div>
-                        <div class="dl-progress-bar">
-                            <div class="dl-progress-fill" id="progress2" style="width:0%"></div>
-                        </div>
-                    </div>
-                    <div class="dl-actions">
-                        <button class="dl-btn" onclick="togglePause(2)">
-                            <i class="fas fa-pause"></i> <span id="pauseText2">Pause</span>
-                        </button>
-                        <button class="dl-btn primary" onclick="resumeDownload(2)">
-                            <i class="fas fa-play"></i> Resume
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- PASTA BRM -->
-        <div id="brm-folder" class="folder-view">
-            <div class="folder-view-header">
-                <i class="fas fa-arrow-left" onclick="backToMain()"></i>
-                <h3>BRM</h3>
-            </div>
-            <div class="file-grid" id="brmContent"></div>
-        </div>
-
-        <!-- PASTA LOCAL -->
-        <div id="local-folder" class="folder-view">
-            <div class="folder-view-header">
-                <i class="fas fa-arrow-left" onclick="backToMain()"></i>
-                <h3>Local</h3>
-            </div>
-            <div class="file-grid" id="localContent"></div>
-        </div>
-
-        <!-- PASTA RECEIVE -->
-        <div id="receive-folder" class="folder-view">
-            <div class="folder-view-header">
-                <i class="fas fa-arrow-left" onclick="backToMain()"></i>
-                <h3>Receive</h3>
-            </div>
-            <div class="file-grid" id="receiveContent"></div>
-        </div>
-
-    </div>
-
-    <!-- ========== PREMIUM ========== -->
-    <div id="p-premium" class="page">
-        <div class="premium-hero">
-            <div class="premium-crown">👑</div>
-            <h2>BRM Pro Max Premium</h2>
-            <p style="color:var(--gray); margin:10px 0;">Desbloqueie todo o potencial</p>
-            <div class="premium-price">R$ 19,90<span>/mês</span></div>
-        </div>
-
-        <!-- CHECK-IN DIÁRIO -->
-        <div class="checkin-section">
-            <div class="section-title">Check-in Daily</div>
-            <div class="checkin-grid">
-                <div class="checkin-day claimed">
-                    <span class="checkin-stars">✓</span>
-                    <span class="checkin-label">Day 1</span>
-                </div>
-                <div class="checkin-day active" onclick="claimDay(this, 2)">
-                    <span class="checkin-stars">⭐+2</span>
-                    <span class="checkin-label">Day 2</span>
-                </div>
-                <div class="checkin-day" onclick="claimDay(this, 2)">
-                    <span class="checkin-stars">⭐+2</span>
-                    <span class="checkin-label">Day 3</span>
-                </div>
-                <div class="checkin-day" onclick="claimDay(this, 2)">
-                    <span class="checkin-stars">⭐+2</span>
-                    <span class="checkin-label">Day 4</span>
-                </div>
-                <div class="checkin-day" onclick="claimDay(this, 2)">
-                    <span class="checkin-stars">⭐+2</span>
-                    <span class="checkin-label">Day 5</span>
-                </div>
-                <div class="checkin-day" onclick="claimDay(this, 2)">
-                    <span class="checkin-stars">⭐+2</span>
-                    <span class="checkin-label">Day 6</span>
-                </div>
-                <div class="checkin-day" onclick="claimDay(this, 5)">
-                    <span class="checkin-stars">⭐+5</span>
-                    <span class="checkin-label">Day 7</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- WATCH AND EARN -->
-        <div class="tasks-section">
-            <div class="section-title">Watch and Earn</div>
-            
-            <div class="task-item">
-                <div class="task-info">
-                    <h4>Video time reaches 30mins</h4>
-                    <div class="task-progress">Progress: 5/30 mins</div>
-                    <div class="task-reward">⭐ +1</div>
-                </div>
-                <button class="task-btn" onclick="completeTask(this)">Watch</button>
-            </div>
-
-            <div class="task-item">
-                <div class="task-info">
-                    <h4>Video time reaches 60mins</h4>
-                    <div class="task-progress">Progress: 5/60 mins</div>
-                    <div class="task-reward">⭐ +1</div>
-                </div>
-                <button class="task-btn" onclick="completeTask(this)">Watch</button>
-            </div>
-
-            <div class="task-item">
-                <div class="task-info">
-                    <h4>Video time reaches 90mins</h4>
-                    <div class="task-progress">Progress: 5/90 mins</div>
-                    <div class="task-reward">⭐ +1</div>
-                </div>
-                <button class="task-btn" onclick="completeTask(this)">Watch</button>
-            </div>
-
-            <div class="task-item">
-                <div class="task-info">
-                    <h4>Video time reaches 120mins</h4>
-                    <div class="task-progress">Progress: 5/120 mins</div>
-                    <div class="task-reward">⭐ +1</div>
-                </div>
-                <button class="task-btn" onclick="completeTask(this)">Watch</button>
-            </div>
-
-            <div class="task-item">
-                <div class="task-info">
-                    <h4>Video time reaches 150mins</h4>
-                    <div class="task-progress">Progress: 5/150 mins</div>
-                    <div class="task-reward">⭐ +1</div>
-                </div>
-                <button class="task-btn" onclick="completeTask(this)">Watch</button>
-            </div>
-        </div>
-
-        <!-- PLAY AND EARN -->
-        <div class="tasks-section">
-            <div class="section-title">Play and Earn</div>
-            <div class="task-item">
-                <div class="task-info">
-                    <h4>Play each game 30+ seconds</h4>
-                    <div class="task-progress">Mini games disponíveis</div>
-                    <div class="task-reward">⭐ +1</div>
-                </div>
-                <button class="task-btn" onclick="completeTask(this)">Play</button>
-            </div>
-        </div>
-
-        <!-- BENEFÍCIOS -->
-        <div class="benefits-list">
-            <div class="section-title">Benefícios Premium</div>
-            <div class="benefit-item">
-                <i class="fas fa-check-circle"></i>
-                <div class="benefit-text">
-                    <h4>Sem Anúncios</h4>
-                    <p>Assista sem interrupções</p>
-                </div>
-            </div>
-            <div class="benefit-item">
-                <i class="fas fa-check-circle"></i>
-                <div class="benefit-text">
-                    <h4>Qualidade 4K</h4>
-                    <p>Resolução ultra HD</p>
-                </div>
-            </div>
-            <div class="benefit-item">
-                <i class="fas fa-check-circle"></i>
-                <div class="benefit-text">
-                    <h4>Downloads Ilimitados</h4>
-                    <p>Baixe quantos quiser</p>
-                </div>
-            </div>
-            <div class="benefit-item">
-                <i class="fas fa-check-circle"></i>
-                <div class="benefit-text">
-                    <h4>4 Telas Simultâneas</h4>
-                    <p>Compartilhe com a família</p>
-                </div>
-            </div>
-        </div>
-
-        <button class="subscribe-btn" onclick="subscribePremium()">
-            ASSINAR AGORA
-        </button>
-    </div>
-
-    <!-- ========== ME ========== -->
-    <div id="p-me" class="page">
-        <div class="me-header">
-            <div class="me-avatar">
-                <i class="fas fa-user"></i>
-            </div>
-            <div class="me-name" id="meName">Soraia Manuel</div>
-            <div class="me-id">ID: 526097803</div>
-        </div>
-
-        <div class="me-menu">
-            <div class="me-item" onclick="toggleFamily()">
-                <div class="me-item-left">
-                    <div class="me-icon"><i class="fas fa-users"></i></div>
-                    <div class="me-text">
-                        <h4>Modo Família</h4>
-                        <p>Controle parental</p>
-                    </div>
-                </div>
-                <div class="switch" id="familySwitch"></div>
-            </div>
-
-            <div class="me-item" onclick="openMyList()">
-                <div class="me-item-left">
-                    <div class="me-icon"><i class="fas fa-bookmark"></i></div>
-                    <div class="me-text">
-                        <h4>Minha Lista</h4>
-                        <p>Filmes e séries salvos</p>
-                    </div>
-                </div>
-                <i class="fas fa-chevron-right" style="color:var(--gray)"></i>
-            </div>
-
-            <div class="me-item" onclick="openHistory()">
-                <div class="me-item-left">
-                    <div class="me-icon"><i class="fas fa-history"></i></div>
-                    <div class="me-text">
-                        <h4>Histórico</h4>
-                        <p>Últimos assistidos</p>
-                    </div>
-                </div>
-                <i class="fas fa-chevron-right" style="color:var(--gray)"></i>
-            </div>
-
-            <div class="me-item" onclick="openLiked()">
-                <div class="me-item-left">
-                    <div class="me-icon"><i class="fas fa-heart"></i></div>
-                    <div class="me-text">
-                        <h4>Meus Curtidos</h4>
-                        <p>Conteúdos favoritos</p>
-                    </div>
-                </div>
-                <i class="fas fa-chevron-right" style="color:var(--gray)"></i>
-            </div>
-
-            <div class="me-item" onclick="openComments()">
-                <div class="me-item-left">
-                    <div class="me-icon"><i class="fas fa-comment"></i></div>
-                    <div class="me-text">
-                        <h4>Comentários</h4>
-                        <p>Suas avaliações</p>
-                    </div>
-                </div>
-                <i class="fas fa-chevron-right" style="color:var(--gray)"></i>
-            </div>
-
-            <div class="me-item" onclick="editProfile()">
-                <div class="me-item-left">
-                    <div class="me-icon"><i class="fas fa-user-edit"></i></div>
-                    <div class="me-text">
-                        <h4>Editar Perfil</h4>
-                        <p>Alterar nome e foto</p>
-                    </div>
-                </div>
-                <i class="fas fa-chevron-right" style="color:var(--gray)"></i>
-            </div>
-
-            <div class="me-item" onclick="appSettings()">
-                <div class="me-item-left">
-                    <div class="me-icon"><i class="fas fa-cog"></i></div>
-                    <div class="me-text">
-                        <h4>Configurações</h4>
-                        <p>Idioma, qualidade, notificações</p>
-                    </div>
-                </div>
-                <i class="fas fa-chevron-right" style="color:var(--gray)"></i>
-            </div>
-
-            <div class="me-item" onclick="logout()" style="margin-top:20px;">
-                <div class="me-item-left">
-                    <div class="me-icon" style="background:rgba(255,0,0,0.1); color:#ff4444;"><i class="fas fa-sign-out-alt"></i></div>
-                    <div class="me-text">
-                        <h4 style="color:#ff4444;">Sair da Conta</h4>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="me-footer">Official Web: BRM.Ph</div>
-    </div>
-
-    <!-- PLAYER -->
-    <div id="player">
-        <div class="player-header">
-            <i class="fas fa-arrow-left" onclick="closePlayer()" style="cursor:pointer;"></i>
-            <span id="playerTitle">Movie</span>
-            <i class="fas fa-ellipsis-v"></i>
-        </div>
-        <div class="video-area">
-            <i class="fas fa-play-circle play-btn-large" onclick="startPlayback()"></i>
         </div>
     </div>
 
-    <!-- NAVBAR LIMPA -->
-    <nav>
-        <div class="nav-link active" onclick="nav('p-home', this)">
-            <i class="fas fa-globe"></i>
-            Home
+    <div id="brm-folder" class="folder-view">
+        <div class="folder-header">
+            <i class="fas fa-arrow-left" onclick="backToMain()"></i>
+            <h3 style="margin:0;">Pasta BRM</h3>
         </div>
-        <div class="nav-link" onclick="nav('p-dl', this)">
-            <i class="fas fa-bolt"></i>
-            Downloads
+        <div class="file-grid" id="brm-content"></div>
+    </div>
+
+    <div id="local-folder" class="folder-view">
+        <div class="folder-header">
+            <i class="fas fa-arrow-left" onclick="backToMain()"></i>
+            <h3 style="margin:0;">Arquivos Locais</h3>
         </div>
-        <div class="nav-link" onclick="nav('p-premium', this)">
-            <i class="fas fa-trophy"></i>
-            Premium
+        <div style="padding:0 15px 15px;">
+            <button onclick="selectLocalFiles()" style="width:100%; background:var(--accent); border:none; padding:12px; border-radius:8px; color:#000; font-weight:bold;">
+                <i class="fas fa-folder-open"></i> Selecionar da Galeria
+            </button>
         </div>
-        <div class="nav-link" onclick="nav('p-me', this)">
-            <i class="fas fa-user-astronaut"></i>
-            Me
+        <div class="local-file-list" id="local-content">
+            <div style="text-align:center; padding:40px; color:var(--gray);">
+                <i class="fas fa-folder-open" style="font-size:48px; margin-bottom:15px; opacity:0.3;"></i>
+                <p>Nenhum arquivo selecionado</p>
+                <p style="font-size:11px; margin-top:10px;">Clique acima para importar vídeos do seu dispositivo</p>
+            </div>
         </div>
-    </nav>
+    </div>
 
-    <script>
-        // ========== DADOS ==========
-        const categories = [
-            { name: 'Filmes', movies: [
-                {t: 'Dune: Part Two', img: 'https://image.tmdb.org/t/p/w200/1pdfLvkbY9ohJlCjQH2CZjjYVv.jpg', r: '4.7'},
-                {t: 'Deadpool 3', img: 'https://image.tmdb.org/t/p/w200/8cdWjvZQUExUUTzyp4t6ESnRSP.jpg', r: '4.6'},
-                {t: 'The Batman', img: 'https://image.tmdb.org/t/p/w200/74xTEgt7R36FpoooUf7ozSJc8G.jpg', r: '4.5'},
-                {t: 'Oppenheimer', img: 'https://image.tmdb.org/t/p/w200/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg', r: '4.8'}
-            ]},
-            { name: 'Séries TV', movies: [
-                {t: 'Stranger Things', img: 'https://image.tmdb.org/t/p/w200/49WJfeN0moxb9IPfGn8AI0MVOlD.jpg', r: '4.6'},
-                {t: 'The Boys', img: 'https://image.tmdb.org/t/p/w200/mY7SeH4HFFxW1hI76Yt8czZEBOC.jpg', r: '4.7'},
-                {t: 'Breaking Bad', img: 'https://image.tmdb.org/t/p/w200/ggFHVNu6YYI5L9pCfOacjizRGt.jpg', r: '4.9'},
-                {t: 'Game of Thrones', img: 'https://image.tmdb.org/t/p/w200/u3bZgnGQ9T01sWNhyveQz0wH0Hl.jpg', r: '4.5'}
-            ]},
-            { name: 'Anime', movies: [
-                {t: 'Solo Leveling', img: 'https://image.tmdb.org/t/p/w200/geCR7m9vZx8PZ7p2P3pODC6hqoX.jpg', r: '4.9'},
-                {t: 'Demon Slayer', img: 'https://image.tmdb.org/t/p/w200/xUf9S88p9PSTp6R61v6YI0uORr.jpg', r: '4.8'},
-                {t: 'Attack on Titan', img: 'https://image.tmdb.org/t/p/w200/hTP1DtLGFamfuWY8H8gOGX6H4G.jpg', r: '4.9'},
-                {t: 'Jujutsu Kaisen', img: 'https://image.tmdb.org/t/p/w200/fHpKWq9ayzSk8nSwqRJWaukUPXc.jpg', r: '4.7'}
-            ]},
-            { name: 'K-Dorama', movies: [
-                {t: 'Squid Game', img: 'https://image.tmdb.org/t/p/w200/dDlEmu3EZ0Pgg93KZ7O8pE7rJ4.jpg', r: '4.6'},
-                {t: 'The Glory', img: 'https://image.tmdb.org/t/p/w200/6JpUveYVvcl8Sj58vT62vU7U6Uv.jpg', r: '4.5'},
-                {t: 'All of Us Are Dead', img: 'https://image.tmdb.org/t/p/w200/pTg8SfP7pKmQfaA5DxTcDSnOGp.jpg', r: '4.3'}
-            ]},
-            { name: 'Terror', movies: [
-                {t: 'The Conjuring', img: 'https://image.tmdb.org/t/p/w200/wVYREutTvI2tmxr6ujr7p966h6.jpg', r: '4.3'},
-                {t: 'Hereditary', img: 'https://image.tmdb.org/t/p/w200/lHV8HHlhwNup2Vb8s8B5n4t4D.jpg', r: '4.2'}
-            ]},
-            { name: 'Músicas', movies: [
-                {t: 'Bohemian Rhapsody', img: 'https://image.tmdb.org/t/p/w200/lHu1wtNaczFPGFDTrjCSzeLPTKN.jpg', r: '4.6'},
-                {t: 'Whiplash', img: 'https://image.tmdb.org/t/p/w200/lIv1QinR7c4KfBnQUaXTmF0T9x.jpg', r: '4.7'}
-            ]}
-        ];
+    <div id="receive-folder" class="folder-view">
+        <div class="folder-header">
+            <i class="fas fa-arrow-left" onclick="backToMain()"></i>
+            <h3 style="margin:0;">Transferências</h3>
+        </div>
+        <div style="padding:0 15px 15px; text-align:center; color:var(--gray); font-size:12px;">
+            <i class="fas fa-info-circle"></i> Arquivos recebidos de outros apps aparecem aqui
+        </div>
+        <div class="file-grid" id="receive-content"></div>
+    </div>
+</div>
 
-        // ========== HOME ==========
-        const catContainer = document.getElementById('categoriesContainer');
-        categories.forEach(cat => {
-            let moviesHtml = '';
-            cat.movies.forEach(m => {
-                moviesHtml += `
-                    <div class="movie-card" onclick="playMovie('${m.t}')">
-                        <img src="${m.img}" alt="${m.t}">
-                        <span class="movie-rating"><i class="fas fa-star"></i> ${m.r}</span>
-                        <div class="movie-overlay">
-                            <div class="movie-title">${m.t}</div>
-                        </div>
-                    </div>
-                `;
-            });
-            catContainer.innerHTML += `
-                <div class="cat-header">
-                    <span class="cat-name">${cat.name}</span>
-                    <span class="cat-more">Ver todos <i class="fas fa-chevron-right"></i></span>
-                </div>
-                <div class="movies-row">${moviesHtml}</div>
-            `;
-        });
+<!-- PREMIUM PAGE -->
+<div id="p-premium" class="page">
+    <div class="premium-hero">
+        <h1><i class="fas fa-crown"></i> Premium</h1>
+        <p>Desbloqueie todo o potencial do BRM Pro Max</p>
+    </div>
+    
+    <div class="plan-card popular">
+        <div class="plan-name">Plano Anual</div>
+        <div style="font-size:12px; color:var(--gray);">Economize 40%</div>
+        <div class="plan-price">R$ 99,90<span>/ano</span></div>
+        <ul class="plan-features">
+            <li><i class="fas fa-check"></i> Sem anúncios</li>
+            <li><i class="fas fa-check"></i> Qualidade 4K</li>
+            <li><i class="fas fa-check"></i> Downloads ilimitados</li>
+            <li><i class="fas fa-check"></i> Streaming em 4 dispositivos</li>
+            <li><i class="fas fa-check"></i> Conteúdo exclusivo</li>
+        </ul>
+        <button class="plan-btn" onclick="subscribe('annual')">Assinar Agora</button>
+    </div>
 
-        // Slider
-        let currentSlide = 0;
-        const slides = document.querySelectorAll('.hero-slide');
-        const dots = document.querySelectorAll('.dot');
+    <div class="plan-card">
+        <div class="plan-name">Plano Mensal</div>
+        <div style="font-size:12px; color:var(--gray);">Flexibilidade total</div>
+        <div class="plan-price">R$ 14,90<span>/mês</span></div>
+        <ul class="plan-features">
+            <li><i class="fas fa-check"></i> Sem anúncios</li>
+            <li><i class="fas fa-check"></i> Qualidade 1080p</li>
+            <li><i class="fas fa-check"></i> Downloads limitados</li>
+            <li><i class="fas fa-check"></i> Streaming em 2 dispositivos</li>
+        </ul>
+        <button class="plan-btn" onclick="subscribe('monthly')" style="background:transparent; border:2px solid var(--accent); color:var(--accent);">Assinar Mensal</button>
+    </div>
+</div>
 
-        function goToSlide(n) {
-            slides[currentSlide].classList.remove('active');
-            dots[currentSlide].classList.remove('active');
-            currentSlide = n;
-            slides[currentSlide].classList.add('active');
-            dots[currentSlide].classList.add('active');
-        }
+<!-- ME PAGE -->
+<div id="p-me" class="page">
+    <div class="me-header"><h2>Configurações</h2><small>ID: 526097803</small></div>
+    <div class="me-list">
+        <div class="me-item" onclick="toggleFamilyMode()">
+            <span><i class="fas fa-users"></i> Modo Família</span>
+            <div class="switch" id="familySwitch"></div>
+        </div>
+        <div class="me-item" onclick="openSubPage('mylist')">
+            <span><i class="fas fa-bookmark"></i> Minha Lista 🔖</span>
+            <i class="fas fa-chevron-right" style="color:var(--gray);"></i>
+        </div>
+        <div class="me-item" onclick="openSubPage('history')">
+            <span><i class="fas fa-history"></i> Histórico 👀</span>
+            <i class="fas fa-chevron-right" style="color:var(--gray);"></i>
+        </div>
+        <div class="me-item" onclick="openSubPage('liked')">
+            <span><i class="fas fa-heart"></i> Meus Curtidos ❤️</span>
+            <i class="fas fa-chevron-right" style="color:var(--gray);"></i>
+        </div>
+        <div class="me-item" onclick="openSubPage('comments')">
+            <span><i class="fas fa-comment"></i> Comentários</span>
+            <i class="fas fa-chevron-right" style="color:var(--gray);"></i>
+        </div>
+        <div style="color:var(--accent); font-weight:bold; margin-top:20px; cursor:pointer; padding: 15px 0;" onclick="window.open('https://brm.ph', '_blank')">
+            <i class="fas fa-globe"></i> Official Web: BRM.Ph
+        </div>
+    </div>
+</div>
 
-        setInterval(() => {
-            goToSlide((currentSlide + 1) % slides.length);
-        }, 3000);
+<!-- SUB PAGES - AGORA FORA DAS PÁGINAS PRINCIPAIS -->
+<div id="sub-mylist" class="sub-page">
+    <div class="page-header">
+        <i class="fas fa-arrow-left" onclick="closeSubPage()"></i>
+        <h2>Minha Lista</h2>
+    </div>
+    <div class="content-list" id="mylist-content"></div>
+</div>
 
-        // ========== DOWNLOADS ==========
+<div id="sub-history" class="sub-page">
+    <div class="page-header">
+        <i class="fas fa-arrow-left" onclick="closeSubPage()"></i>
+        <h2>Histórico</h2>
+    </div>
+    <div class="content-list" id="history-content"></div>
+</div>
+
+<div id="sub-liked" class="sub-page">
+    <div class="page-header">
+        <i class="fas fa-arrow-left" onclick="closeSubPage()"></i>
+        <h2>Meus Curtidos</h2>
+    </div>
+    <div class="content-list" id="liked-content"></div>
+</div>
+
+<div id="sub-comments" class="sub-page">
+    <div class="page-header">
+        <i class="fas fa-arrow-left" onclick="closeSubPage()"></i>
+        <h2>Meus Comentários</h2>
+    </div>
+    <div class="content-list" id="comments-content"></div>
+</div>
+
+<!-- PLAYER -->
+<div id="player">
+    <div style="padding:20px; display:flex; justify-content:space-between">
+        <i class="fas fa-chevron-left" onclick="closePlayer()"></i><span id="p-title">Beekeeper</span><i class="fas fa-cog"></i>
+    </div>
+    <div class="video-area"><i class="fas fa-play-circle" style="font-size:60px; color:var(--accent)"></i></div>
+    <div class="controls">
+        <div class="progress-bar"><div class="progress-fill" style="width:40%"></div></div>
+        <div style="display:flex; justify-content:space-around; margin:20px 0; font-size:20px">
+            <i class="fas fa-backward"></i><i class="fas fa-pause"></i><i class="fas fa-forward"></i>
+        </div>
+        <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--gray)">
+            <span>Velocidade: 1.0x</span><span>Qualidade: 720p</span><span>Legenda: PT</span>
+        </div>
+    </div>
+</div>
+
+<input type="file" id="file-input" accept="video/*,audio/*,image/*" multiple onchange="handleLocalFiles(this.files)">
+
+<nav>
+    <div class="nav-link active" onclick="nav('p-home', this)"><i class="fas fa-globe"></i>Home 🌐</div>
+    <div class="nav-link" onclick="nav('p-dl', this)"><i class="fas fa-bolt"></i>Downloads ⚡</div>
+    <div class="nav-link" onclick="nav('p-premium', this)"><i class="fas fa-trophy"></i>Premium 🏆</div>
+    <div class="nav-link" onclick="nav('p-me', this)"><i class="fas fa-user-astronaut"></i>Me 🗽</div>
+</nav>
+
+<script>
+    // CONFIGURAÇÃO - URL DO SEU JSON NO GITHUB
+    const MOVIES_JSON_URL = 'https://raw.githubusercontent.com/SEU_USERNAME/SEU_REPO/main/movies.json';
+    // Exemplo: https://raw.githubusercontent.com/brmapp/brm-data/main/movies.json
+
+    let allMovies = []; // Vai armazenar filmes do JSON + locais
+
+    // DADOS LOCAIS (fallback)
+    const localMovies = [
+        {id: 1, title: "The Beekeeper", year: 2025, genre: "Action", img: "https://image.tmdb.org/t/p/w200/A7ezFmB0m9PSTp6R61v6YI0uORr.jpg", type: "movie"},
+        {id: 2, title: "Dune: Part Two", year: 2024, genre: "Sci-Fi", img: "https://image.tmdb.org/t/p/w200/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg", type: "movie"},
+        {id: 3, title: "Deadpool 3", year: 2024, genre: "Action", img: "https://image.tmdb.org/t/p/w200/8cdWjvZQUExUUTzyp4t6EA4KrDZ.jpg", type: "movie"},
+        {id: 4, title: "Joker 2", year: 2024, genre: "Drama", img: "https://image.tmdb.org/t/p/w200/myCEG6C5NkAlUMZiTZ34msVwOS.jpg", type: "movie"},
+        {id: 5, title: "Furiosa", year: 2024, genre: "Action", img: "https://image.tmdb.org/t/p/w200/tGHUlykWn9V2IIQ4ZaATIAq9VLB.jpg", type: "movie"},
+        {id: 6, title: "Inside Out 2", year: 2024, genre: "Animation", img: "https://image.tmdb.org/t/p/w200/vpnVM9B6NMmQpWeZvzLvDESb2QY.jpg", type: "movie"},
+        {id: 7, title: "Despicable Me 4", year: 2024, genre: "Animation", img: "https://image.tmdb.org/t/p/w200/wWba3TaojhK7NdacRgcQ8nR6F0m.jpg", type: "movie"},
+        {id: 8, title: "Godzilla x Kong", year: 2024, genre: "Action", img: "https://image.tmdb.org/t/p/w200/tMefBSflR6PGQLv7WvFPpKLZkyk.jpg", type: "movie"}
+    ];
+
+    const cats = ["Filmes", "Séries TV", "Anime", "D-Dorama", "K-Dorama", "Cartoon", "USA Movies", "Brazil Movies", "Cinema 2026", "Thriller", "Terror", "Músicas"];
+
+    // STORAGE
+    let brmFiles = JSON.parse(localStorage.getItem('brm_files')) || [
+        {id: 1, name: "The Beekeeper", size: "858.3 MB", quality: "360p", progress: 12, thumb: "https://image.tmdb.org/t/p/w200/A7ezFmB0m9PSTp6R61v6YI0uORr.jpg", date: "2025-01-15"},
+        {id: 2, name: "Solo Leveling EP1", size: "450.2 MB", quality: "720p", progress: 100, thumb: "https://image.tmdb.org/t/p/w200/geCR7m9vZx8PZ7p2P3pODC6hqoX.jpg", date: "2025-01-14"},
+        {id: 3, name: "Demon Slayer", size: "1.2 GB", quality: "1080p", progress: 100, thumb: "https://image.tmdb.org/t/p/w200/xUf9S88p9PSTp6R61v6YI0uORr.jpg", date: "2025-01-13"}
+    ];
+    let localFiles = JSON.parse(localStorage.getItem('local_files')) || [];
+    let receiveFiles = JSON.parse(localStorage.getItem('receive_files')) || [];
+    let myList = JSON.parse(localStorage.getItem('my_list')) || [];
+    let history = JSON.parse(localStorage.getItem('history')) || [];
+    let liked = JSON.parse(localStorage.getItem('liked')) || [];
+    let comments = JSON.parse(localStorage.getItem('comments')) || [];
+    let familyMode = JSON.parse(localStorage.getItem('family_mode')) || false;
+
+    // INIT
+    window.onload = async function() {
+        // Carregar filmes do JSON primeiro
+        await loadMoviesFromJSON();
         
-        // Dados das pastas
-        const brmFiles = [
-            {name: 'Beekeeper', size: '858.3 MB', quality: '360p', progress: 12},
-            {name: 'Solo Leveling EP1', size: '450.2 MB', quality: '720p', progress: 100},
-            {name: 'Demon Slayer', size: '1.2 GB', quality: '1080p', progress: 100}
-        ];
-
-        const localFiles = [
-            {name: 'VID_20250115_143022', size: '45.2 MB', duration: '2:34'},
-            {name: 'Como Treinar Seu Dragão', size: '1.8 GB', duration: '1:38:22'},
-            {name: 'Show da Luna EP12', size: '280.5 MB', duration: '22:15'},
-            {name: 'Viagem para SP', size: '125.8 MB', duration: '5:47'},
-            {name: 'Aniversario_Maria', size: '890.3 MB', duration: '45:20'},
-            {name: 'TikTok_Video_123', size: '15.4 MB', duration: '0:45'},
-            {name: 'Aula de Pilates', size: '234.1 MB', duration: '58:30'},
-            {name: 'Receita de Bolo', size: '12.8 MB', duration: '3:22'}
-        ];
-
-        const receiveFiles = [];
-
-        function openBRMFolder() {
-            document.getElementById('dl-main-view').style.display = 'none';
-            document.getElementById('brm-folder').classList.add('active');
-            
-            const container = document.getElementById('brmContent');
-            container.innerHTML = brmFiles.map(f => `
-                <div class="file-item" onclick="playMovie('${f.name}')">
-                    <div class="file-thumb video"></div>
-                    <div class="file-info">
-                        <div class="file-name">${f.name}</div>
-                        <div class="file-meta">
-                            <span style="color:var(--accent)">${f.size}</span>
-                            <span>${f.quality}</span>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
+        // Se falhar, usa locais
+        if (allMovies.length === 0) {
+            allMovies = [...localMovies];
         }
-
-        function openLocalFolder() {
-            document.getElementById('dl-main-view').style.display = 'none';
-            document.getElementById('local-folder').classList.add('active');
-            
-            const container = document.getElementById('localContent');
-            container.innerHTML = localFiles.map(f => `
-                <div class="file-item" onclick="playMovie('${f.name}')">
-                    <div class="file-thumb video"></div>
-                    <div class="file-info">
-                        <div class="file-name">${f.name}</div>
-                        <div class="file-meta">
-                            <span style="color:var(--accent)">${f.size}</span>
-                            <span>${f.duration}</span>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
+        
+        rotate();
+        renderCategories();
+        document.getElementById('brm-count').textContent = brmFiles.length + ' itens';
+        updateReceiveCount();
+        if (familyMode) document.getElementById('familySwitch').classList.add('active');
+        
+        // Dados demo se vazio
+        if (myList.length === 0) {
+            myList = [allMovies[0], allMovies[2]].filter(Boolean);
+            localStorage.setItem('my_list', JSON.stringify(myList));
         }
-
-        function openReceiveFolder() {
-            document.getElementById('dl-main-view').style.display = 'none';
-            document.getElementById('receive-folder').classList.add('active');
-            
-            const container = document.getElementById('receiveContent');
-            if (receiveFiles.length === 0) {
-                container.innerHTML = `
-                    <div style="grid-column:1/-1; text-align:center; padding:60px 20px; color:var(--gray);">
-                        <i class="fas fa-share-alt" style="font-size:48px; margin-bottom:15px; opacity:0.3;"></i>
-                        <p>Nenhuma transferência recebida</p>
-                        <p style="font-size:11px; margin-top:10px;">Compartilhe arquivos de outros apps para o BRM</p>
-                    </div>
-                `;
-            }
+        if (history.length === 0) {
+            history = [{...allMovies[1], date: 'Hoje', progress: '45%'}, {...allMovies[3], date: 'Ontem', progress: '100%'}].filter(Boolean);
+            localStorage.setItem('history', JSON.stringify(history));
         }
-
-        function backToMain() {
-            document.querySelectorAll('.folder-view').forEach(v => v.classList.remove('active'));
-            document.getElementById('dl-main-view').style.display = 'block';
+        if (liked.length === 0) {
+            liked = [allMovies[0], allMovies[4], allMovies[5]].filter(Boolean);
+            localStorage.setItem('liked', JSON.stringify(liked));
         }
-
-        function togglePause(id) {
-            const status = document.getElementById(`status${id}`);
-            const btnText = document.getElementById(`pauseText${id}`);
-            
-            if (status.innerText === 'Paused') {
-                status.innerText = 'No Internet';
-                status.className = 'dl-status status-no-internet';
-                btnText.innerText = 'Pause';
-            } else {
-                status.innerText = 'Paused';
-                status.className = 'dl-status status-paused';
-                btnText.innerText = 'Resume';
-            }
+        if (comments.length === 0) {
+            comments = [
+                {id: 1, movie: allMovies[0]?.title || "The Beekeeper", text: "Excelente filme de ação! Jason Statham incrível.", date: "2 dias atrás"},
+                {id: 2, movie: allMovies[1]?.title || "Dune: Part Two", text: "Visualmente deslumbrante.", date: "1 semana atrás"}
+            ];
+            localStorage.setItem('comments', JSON.stringify(comments));
         }
+    };
 
-        function resumeDownload(id) {
-            const status = document.getElementById(`status${id}`);
-            const progress = document.getElementById(`progress${id}`);
-            const percent = document.getElementById(`percent${id}`);
-            
-            status.innerText = 'Downloading...';
-            status.className = 'dl-status status-downloading';
-            
-            let width = parseInt(progress.style.width);
-            const interval = setInterval(() => {
-                if (width >= 100) {
-                    clearInterval(interval);
-                    status.innerText = 'Completed';
-                    status.className = 'dl-status status-completed';
-                } else {
-                    width++;
-                    progress.style.width = width + '%';
-                    percent.innerText = width + '%';
+    // CARREGAR FILMES DO GITHUB JSON
+    async function loadMoviesFromJSON() {
+        try {
+            // Tenta carregar do GitHub
+            const response = await fetch(MOVIES_JSON_URL + '?t=' + Date.now()); // Cache bust
+            if (!response.ok) throw new Error('Falha ao carregar');
+            const data = await response.json();
+            allMovies = data.movies || data; // Suporta {movies: [...]} ou [...]
+            console.log('Filmes carregados do GitHub:', allMovies.length);
+        } catch (e) {
+            console.log('Usando filmes locais:', e);
+            allMovies = [...localMovies];
+        }
+    }
+
+    // HERO SLIDER
+    const slides = [
+        {n:"The Beekeeper", d:"2025 Action ⬇️", img:"https://image.tmdb.org/t/p/original/A7ezFmB0m9PSTp6R61v6YI0uORr.jpg"},
+        {n:"Avatar 3", d:"2026 Cinema", img:"https://image.tmdb.org/t/p/original/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg"}
+    ];
+    let cur = 0;
+    function rotate() {
+        const h = document.getElementById('heroSlide');
+        h.style.backgroundImage = `url('${slides[cur].img}')`;
+        h.innerHTML = `<div class="info-box"><h2>${slides[cur].n}</h2><p>${slides[cur].d}</p></div>`;
+        cur = (cur + 1) % slides.length;
+    }
+    setInterval(rotate, 5000);
+
+    // RENDER CATEGORIES COM FILMES DO JSON
+    function renderCategories() {
+        const cl = document.getElementById('cat-list');
+        cl.innerHTML = '';
+        cats.forEach((c, idx) => {
+            let cards = '';
+            for (let i = 0; i < 5; i++) {
+                const movie = allMovies[(idx + i) % allMovies.length];
+                if (movie) {
+                    cards += `<div class="movie-card" style="background-image:url('${movie.img}')" onclick="openPlayer('${movie.title}')"></div>`;
                 }
-            }, 100);
-        }
-
-        // ========== PREMIUM ==========
-        function claimDay(el, stars) {
-            el.classList.remove('active');
-            el.classList.add('claimed');
-            el.querySelector('.checkin-stars').innerText = '✓';
-        }
-
-        function completeTask(btn) {
-            btn.innerText = '✓ Done';
-            btn.classList.add('completed');
-            btn.disabled = true;
-        }
-
-        function subscribePremium() {
-            // Sem confirmação, executa direto
-            alert('Assinatura ativada!');
-        }
-
-        // ========== ME ==========
-        function toggleFamily() {
-            document.getElementById('familySwitch').classList.toggle('active');
-        }
-
-        function openMyList() {
-            // Executa sem confirmação
-        }
-
-        function openHistory() {
-            // Executa sem confirmação
-        }
-
-        function openLiked() {
-            // Executa sem confirmação
-        }
-
-        function openComments() {
-            // Executa sem confirmação
-        }
-
-        function editProfile() {
-            const newName = prompt('Novo nome:', 'Soraia Manuel');
-            if (newName) {
-                document.getElementById('meName').innerText = newName;
             }
-        }
-
-        function appSettings() {
-            // Executa sem confirmação
-        }
-
-        function logout() {
-            // Executa sem confirmação, apenas ação
-            window.location.reload();
-        }
-
-        // ========== PLAYER ==========
-        function playMovie(title) {
-            document.getElementById('playerTitle').innerText = title;
-            document.getElementById('player').style.display = 'flex';
-        }
-
-        function closePlayer() {
-            document.getElementById('player').style.display = 'none';
-        }
-
-        function startPlayback() {
-            document.querySelector('.play-btn-large').style.display = 'none';
-        }
-
-        // ========== NAV ==========
-        function nav(pageId, el) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
-            if(el) el.classList.add('active');
-        }
-
-        // ========== SEARCH ==========
-        document.getElementById('searchInput').addEventListener('keyup', (e) => {
-            if(e.key === 'Enter') {
-                // Executa busca sem confirmação
-            }
+            cl.innerHTML += `<div class="cat-title">${c}</div><div class="scroll-row">${cards}</div>`;
         });
+    }
 
-        // Verificar conexão
-        window.addEventListener('online', () => {
-            document.getElementById('adBanner').classList.remove('show');
-        });
-        window.addEventListener('offline', () => {
-            document.getElementById('adBanner').classList.add('show');
-        });
-
-        if(!navigator.onLine) {
-            document.getElementById('adBanner').classList.add('show');
+    // NAVIGATION - CONTROLA HEADER VISIBILITY
+    function nav(id, el) {
+        // Esconde todas as páginas e subpáginas
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.sub-page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
+        
+        // Mostra a página selecionada
+        document.getElementById(id).classList.add('active');
+        if (el) el.classList.add('active');
+        
+        // Controle do header (só na home)
+        const header = document.getElementById('main-header');
+        if (id === 'p-home') {
+            header.classList.add('active');
+        } else {
+            header.classList.remove('active');
         }
-    </script>
+        
+        window.scrollTo(0, 0);
+    }
+
+    // PLAYER
+    function openPlayer(t) { 
+        document.getElementById('p-title').innerText = t; 
+        document.getElementById('player').style.display = 'flex';
+        addToHistory(t);
+    }
+    function closePlayer() { 
+        document.getElementById('player').style.display = 'none'; 
+    }
+
+    // SUB PAGES - SISTEMA CORRIGIDO
+    function openSubPage(type) {
+        // Esconde todas as páginas principais
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        // Esconde outras subpáginas
+        document.querySelectorAll('.sub-page').forEach(p => p.classList.remove('active'));
+        // Mostra a subpágina específica
+        document.getElementById('sub-' + type).classList.add('active');
+        
+        // Renderiza conteúdo
+        if (type === 'mylist') renderMyList();
+        else if (type === 'history') renderHistory();
+        else if (type === 'liked') renderLiked();
+        else if (type === 'comments') renderComments();
+        
+        window.scrollTo(0, 0);
+    }
+
+    function closeSubPage() {
+        // Esconde subpáginas
+        document.querySelectorAll('.sub-page').forEach(p => p.classList.remove('active'));
+        // Volta para a página "Me"
+        document.getElementById('p-me').classList.add('active');
+        // Mantém a navbar ativa no "Me"
+        document.querySelectorAll('.nav-link')[3].classList.add('active');
+    }
+
+    // RENDER FUNCTIONS
+    function renderMyList() {
+        const container = document.getElementById('mylist-content');
+        if (myList.length === 0) {
+            container.innerHTML = `<div class="no-results"><i class="fas fa-bookmark"></i><p>Sua lista está vazia</p><p style="font-size:12px; margin-top:10px;">Adicione filmes e séries aos favoritos</p></div>`;
+            return;
+        }
+        container.innerHTML = myList.map(m => `
+            <div class="list-item" onclick="openPlayer('${m.title}')">
+                <div class="list-thumb" style="background-image:url('${m.img}')"></div>
+                <div class="list-info">
+                    <div class="list-title">${m.title}</div>
+                    <div class="list-meta">${m.year} • ${m.genre}</div>
+                </div>
+                <i class="fas fa-play-circle list-action"></i>
+            </div>
+        `).join('');
+    }
+
+    function renderHistory() {
+        const container = document.getElementById('history-content');
+        if (history.length === 0) {
+            container.innerHTML = `<div class="no-results"><i class="fas fa-history"></i><p>Nenhum histórico de visualização</p></div>`;
+            return;
+        }
+        container.innerHTML = history.map(m => `
+            <div class="list-item" onclick="openPlayer('${m.title}')">
+                <div class="list-thumb" style="background-image:url('${m.img}')"></div>
+                <div class="list-info">
+                    <div class="list-title">${m.title}</div>
+                    <div class="list-meta">${m.date} • ${m.progress} assistido</div>
+                </div>
+                <i class="fas fa-redo list-action"></i>
+            </div>
+        `).join('');
+    }
+
+    function renderLiked() {
+        const container = document.getElementById('liked-content');
+        if (liked.length === 0) {
+            container.innerHTML = `<div class="no-results"><i class="fas fa-heart"></i><p>Você ainda não curtiu nenhum conteúdo</p></div>`;
+            return;
+        }
+        container.innerHTML = liked.map(m => `
+            <div class="list-item" onclick="openPlayer('${m.title}')">
+                <div class="list-thumb" style="background-image:url('${m.img}')"></div>
+                <div class="list-info">
+                    <div class="list-title">${m.title}</div>
+                    <div class="list-meta">${m.year} • ${m.genre}</div>
+                </div>
+                <i class="fas fa-heart list-action" style="color:#ff0055;"></i>
+            </div>
+        `).join('');
+    }
+
+    function renderComments() {
+        const container = document.getElementById('comments-content');
+        if (comments.length === 0) {
+            container.innerHTML = `<div class="no-results"><i class="fas fa-comment"></i><p>Você não fez nenhum comentário ainda</p></div>`;
+            return;
+        }
+        container.innerHTML = comments.map(c => `
+            <div class="comment-item">
+                <div class="comment-header">
+                    <span class="comment-user">Você</span>
+                    <span class="comment-date">${c.date}</span>
+                </div>
+                <div class="comment-text">${c.text}</div>
+                <div class="comment-movie"><i class="fas fa-film"></i> ${c.movie}</div>
+            </div>
+        `).join('');
+    }
+
+    // FAMILY MODE
+    function toggleFamilyMode() {
+        familyMode = !familyMode;
+        localStorage.setItem('family_mode', familyMode);
+        document.getElementById('familySwitch').classList.toggle('active');
+        alert(familyMode ? 'Modo Família ativado! Conteúdo filtrado.' : 'Modo Família desativado!');
+    }
+
+    // ADD TO HISTORY
+    function addToHistory(title) {
+        const movie = allMovies.find(m => m.title === title) || {title, img: slides[0].img, year: 2024, genre: 'Movie'};
+        const exists = history.find(h => h.title === title);
+        if (!exists) {
+            history.unshift({...movie, date: 'Agora', progress: '0%'});
+            localStorage.setItem('history', JSON.stringify(history));
+        }
+    }
+
+    // SEARCH - SÓ CONTEÚDO DO APP (allMovies)
+    function handleSearch(e) {
+        if (e.key === 'Enter') {
+            const query = e.target.value;
+            document.getElementById('search-overlay').classList.add('active');
+            document.getElementById('searchInputOverlay').value = query;
+            performSearch(query);
+            e.target.value = ''; // Limpa o input original
+        }
+    }
+
+    function performSearch(query) {
+        const container = document.getElementById('searchContent');
+        if (!query) {
+            container.innerHTML = `<div class="no-results"><i class="fas fa-search"></i><p>Digite para buscar filmes, séries, dorama...</p></div>`;
+            return;
+        }
+        
+        // Busca SÓ em allMovies (conteúdo do app)
+        const results = allMovies.filter(m => 
+            m.title.toLowerCase().includes(query.toLowerCase()) ||
+            m.genre.toLowerCase().includes(query.toLowerCase())
+        );
+        
+        if (results.length === 0) {
+            container.innerHTML = `<div class="no-results"><i class="fas fa-times-circle"></i><p>Nenhum resultado para "${query}"</p></div>`;
+            return;
+        }
+        
+        container.innerHTML = `<div style="margin-bottom:15px; color:var(--gray);">${results.length} resultados encontrados</div>` + 
+            results.map(m => `
+                <div class="list-item" onclick="openPlayer('${m.title}'); closeSearch();">
+                    <div class="list-thumb" style="background-image:url('${m.img}')"></div>
+                    <div class="list-info">
+                        <div class="list-title">${m.title}</div>
+                        <div class="list-meta">${m.year} • ${m.genre}</div>
+                    </div>
+                    <i class="fas fa-play list-action"></i>
+                </div>
+            `).join('');
+    }
+
+    function closeSearch() {
+        document.getElementById('search-overlay').classList.remove('active');
+        document.getElementById('searchContent').innerHTML = `<div class="no-results"><i class="fas fa-search"></i><p>Digite para buscar filmes, séries, dorama...</p></div>`;
+    }
+
+    // PREMIUM
+    function subscribe(plan) {
+        alert(`Redirecionando para pagamento do plano ${plan}...`);
+    }
+
+    // FOLDER FUNCTIONS
+    function openBRMFolder() {
+        document.getElementById('dl-main-view').style.display = 'none';
+        document.getElementById('brm-folder').classList.add('active');
+        renderBRMFiles();
+    }
+
+    function renderBRMFiles() {
+        const container = document.getElementById('brm-content');
+        if (brmFiles.length === 0) {
+            container.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--gray);"><i class="fas fa-film" style="font-size:48px; margin-bottom:15px; opacity:0.3;"></i><p>Nenhum download</p></div>`;
+            return;
+        }
+        container.innerHTML = brmFiles.map(file => `
+            <div class="file-item" onclick="openPlayer('${file.name}')">
+                <div class="file-thumb video" style="background-image:url('${file.thumb}'); background-size:cover;"></div>
+                <div class="file-info">
+                    <div class="file-name">${file.name}</div>
+                    <div class="file-meta"><span class="file-size">${file.size}</span><span>${file.quality}</span></div>
+                    ${file.progress < 100 ? `<div style="margin-top:5px; font-size:9px; color:var(--accent);">${file.progress}% baixado</div>` : ''}
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function openLocalFolder() {
+        document.getElementById('dl-main-view').style.display = 'none';
+        document.getElementById('local-folder').classList.add('active');
+        renderLocalFiles();
+    }
+
+    function selectLocalFiles() {
+        document.getElementById('file-input').click();
+    }
+
+    function handleLocalFiles(files) {
+        if (!files.length) return;
+        Array.from(files).forEach(file => {
+            const size = (file.size / (1024 * 1024)).toFixed(1) + ' MB';
+            const type = file.type.startsWith('video/') ? 'video' : file.type.startsWith('audio/') ? 'audio' : 'file';
+            localFiles.push({
+                id: Date.now() + Math.random(),
+                name: file.name.replace(/\.[^/.]+$/, ""),
+                size: size,
+                type: type,
+                path: file.name,
+                date: new Date().toLocaleDateString()
+            });
+        });
+        localStorage.setItem('local_files', JSON.stringify(localFiles));
+        renderLocalFiles();
+    }
+
+    function renderLocalFiles() {
+        const container = document.getElementById('local-content');
+        if (localFiles.length === 0) {
+            container.innerHTML = `<div style="text-align:center; padding:40px; color:var(--gray);"><i class="fas fa-folder-open" style="font-size:48px; margin-bottom:15px; opacity:0.3;"></i><p>Nenhum arquivo selecionado</p></div>`;
+            return;
+        }
+        container.innerHTML = localFiles.map(file => `
+            <div class="local-file-item" onclick="openPlayer('${file.name}')">
+                <div class="local-file-icon"><i class="fas fa-${file.type === 'video' ? 'film' : file.type === 'audio' ? 'music' : 'file'}"></i></div>
+                <div class="local-file-info"><div class="local-file-name">${file.name}</div><div class="local-file-path">${file.size} • ${file.path}</div></div>
+                <i class="fas fa-play" style="color:var(--accent);"></i>
+            </div>
+        `).join('');
+    }
+
+    function openReceiveFolder() {
+        document.getElementById('dl-main-view').style.display = 'none';
+        document.getElementById('receive-folder').classList.add('active');
+        renderReceiveFiles();
+    }
+
+    function renderReceiveFiles() {
+        const container = document.getElementById('receive-content');
+        if (receiveFiles.length === 0) {
+            container.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--gray);"><i class="fas fa-share-alt" style="font-size:48px; margin-bottom:15px; opacity:0.3;"></i><p>Nenhuma transferência</p></div>`;
+            return;
+        }
+        container.innerHTML = receiveFiles.map(file => `
+            <div class="file-item" onclick="openPlayer('${file.name}')">
+                <div class="file-thumb video"></div>
+                <div class="transfer-badge ${file.type}">${file.type === 'received' ? 'RECEBIDO' : 'ENVIADO'}</div>
+                <div class="file-info">
+                    <div class="file-name">${file.name}</div>
+                    <div class="file-meta"><span class="file-size">${file.size}</span><span style="font-size:9px; color:var(--gray);">${file.from || 'App externo'}</span></div>
+                    <div style="font-size:9px; color:var(--gray); margin-top:5px;">${file.date}</div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function updateReceiveCount() {
+        document.getElementById('receive-count').textContent = receiveFiles.length + ' transferências';
+    }
+
+    function backToMain() {
+        document.querySelectorAll('.folder-view').forEach(v => v.classList.remove('active'));
+        document.getElementById('dl-main-view').style.display = 'block';
+    }
+</script>
 </body>
 </html>
