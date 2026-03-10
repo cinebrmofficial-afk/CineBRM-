@@ -1,153 +1,1553 @@
+
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-pt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BRM Pro Max Official</title>
+    <title>BRM Pro Max</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --bg: #000; --accent: #00f2ff; --card: #121212; --text-dim: #888; }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; padding-bottom: 80px; overflow-x: hidden; }
+        :root { --bg: #000; --accent: #00f2ff; --card: #111; --gray: #888; --gold: #ffd700; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+        body { background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; overflow-x: hidden; padding-bottom: 80px; }
 
-        /* HEADER & LOGO */
-        header { position: fixed; top: 0; width: 100%; z-index: 1000; display: flex; align-items: center; padding: 12px 15px; background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); }
-        .logo-img { height: 40px; margin-right: 12px; filter: drop-shadow(0 0 5px var(--accent)); }
-        .search-container { flex: 1; background: #1a1a1a; border-radius: 20px; padding: 8px 15px; display: flex; align-items: center; border: 1px solid #333; }
-        .search-container input { background: none; border: none; color: white; width: 100%; outline: none; font-size: 14px; }
+        /* HEADER */
+        header { 
+            position: fixed; 
+            top: 0; 
+            width: 100%; 
+            z-index: 1000; 
+            display: flex; 
+            align-items: center; 
+            padding: 10px 15px; 
+            background: linear-gradient(to bottom, rgba(0,0,0,0.95), transparent);
+        }
+        .logo-img { 
+            height: 42px; 
+            filter: drop-shadow(0 0 8px var(--accent));
+            margin-right: 12px;
+        }
+        .search-box { 
+            flex: 1; 
+            background: rgba(255,255,255,0.1); 
+            border-radius: 25px; 
+            padding: 10px 15px; 
+            display: flex; 
+            align-items: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .search-box input { 
+            background: none; 
+            border: none; 
+            color: white; 
+            width: 100%; 
+            outline: none;
+            font-size: 14px;
+        }
 
-        /* NAVEGAÇÃO ENTRE TELAS */
-        .page { display: none; animation: fadeIn 0.4s ease; padding-top: 70px; }
-        .page.active { display: block; }
+        /* PAGES */
+        .page { display: none; min-height: 100vh; }
+        .page.active { display: block; animation: fadeIn 0.4s; }
 
-        /* HOME - HERO & CATEGORIAS */
-        .hero { width: 100%; height: 450px; background-size: cover; background-position: center; display: flex; align-items: flex-end; padding: 30px 20px; margin-top: -70px; }
-        .hero-meta { background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); padding: 15px; border-left: 4px solid var(--accent); border-radius: 4px; }
-        .category-group { margin-top: 20px; }
-        .category-title { padding: 0 15px 10px; color: var(--accent); font-weight: bold; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; }
-        .movie-row { display: flex; overflow-x: auto; gap: 12px; padding: 0 15px; }
-        .movie-row::-webkit-scrollbar { display: none; }
-        .movie-thumb { min-width: 110px; height: 160px; background: #1a1a1a; border-radius: 8px; flex-shrink: 0; border: 1px solid #222; }
+        /* ========== HOME ========== */
+        #p-home { padding-top: 70px; }
+        
+        .hero-slider {
+            position: relative;
+            width: 100%;
+            height: 85vh;
+            overflow: hidden;
+        }
+        .hero-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+        .hero-slide.active { opacity: 1; }
+        .hero-slide::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 70%;
+            background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.3) 50%, transparent 100%);
+        }
+        .hero-info {
+            position: absolute;
+            bottom: 80px;
+            left: 20px;
+            right: 20px;
+            z-index: 10;
+        }
+        .hero-title {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+        }
+        .hero-meta {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 14px;
+            color: rgba(255,255,255,0.8);
+        }
+        .hero-year {
+            background: var(--accent);
+            color: #000;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 12px;
+        }
+        .hero-badge {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .slider-dots {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 20;
+        }
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .dot.active {
+            background: var(--accent);
+            width: 24px;
+            border-radius: 4px;
+        }
 
-        /* DOWNLOADS ⚡ */
-        .dl-content { padding: 15px; }
-        .dl-status-card { background: #0a0a0a; padding: 15px; border-radius: 12px; border: 1px solid #1a1a1a; margin-top: 10px; }
-        .dl-progress-bg { height: 4px; background: #222; width: 100%; margin: 12px 0; border-radius: 2px; }
-        .dl-progress-fill { height: 100%; background: var(--accent); width: 12%; box-shadow: 0 0 10px var(--accent); }
-        .folder-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; padding: 20px 15px; }
-        .folder-item { background: #111; padding: 15px; border-radius: 10px; text-align: center; font-size: 11px; border: 1px solid #222; }
+        /* CATEGORIAS */
+        .categories-section { padding: 20px 0; }
+        .cat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 15px 10px;
+        }
+        .cat-name {
+            color: var(--accent);
+            font-weight: bold;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .cat-more {
+            color: var(--gray);
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .movies-row {
+            display: flex;
+            overflow-x: auto;
+            gap: 12px;
+            padding: 0 15px 20px;
+            scroll-snap-type: x mandatory;
+        }
+        .movies-row::-webkit-scrollbar { display: none; }
+        .movie-card {
+            min-width: 140px;
+            height: 200px;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            scroll-snap-align: start;
+            cursor: pointer;
+            border: 1px solid #222;
+        }
+        .movie-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .movie-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 10px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.9));
+        }
+        .movie-title {
+            font-size: 11px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .movie-rating {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(0,0,0,0.7);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 10px;
+            color: var(--gold);
+        }
 
-        /* PREMIUM 🏆 */
-        .premium-box { padding: 25px; text-align: center; background: #0a0a0a; border-bottom: 1px solid #222; }
-        .star-points { background: #ffd700; color: #000; padding: 5px 15px; border-radius: 20px; font-weight: bold; display: inline-block; margin-bottom: 10px; }
-        .task-item { background: #0f0f0f; margin: 15px; padding: 15px; border-radius: 12px; border: 1px solid #222; display: flex; justify-content: space-between; align-items: center; }
-        .task-btn { background: var(--accent); color: #000; border: none; padding: 8px 15px; border-radius: 5px; font-weight: bold; font-size: 12px; }
+        /* ========== DOWNLOADS ========== */
+        #p-dl { padding-top: 70px; }
+        
+        .dl-header {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .dl-header h2 {
+            font-size: 20px;
+        }
+        .dl-count-badge {
+            background: var(--accent);
+            color: #000;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
 
-        /* NAV BAR FIXA */
-        nav { position: fixed; bottom: 0; width: 100%; height: 75px; background: #000; border-top: 1px solid #222; display: flex; justify-content: space-around; align-items: center; z-index: 2000; }
-        .nav-link { text-align: center; font-size: 11px; color: #666; cursor: pointer; }
-        .nav-link.active { color: var(--accent); }
-        .nav-link i { font-size: 22px; display: block; margin-bottom: 4px; }
+        .ad-banner {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 0 15px 20px;
+            display: none;
+        }
+        .ad-banner.show { display: block; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        /* PASTAS DE DOWNLOAD */
+        .folder-section {
+            margin: 0 15px 20px;
+        }
+        .folder-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        .folder-item {
+            background: #111;
+            padding: 20px 15px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid #222;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .folder-item:active {
+            transform: scale(0.95);
+            background: #1a1a1a;
+        }
+        .folder-item i {
+            font-size: 28px;
+            color: var(--accent);
+            margin-bottom: 10px;
+            display: block;
+        }
+        .folder-name {
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+        .folder-count {
+            font-size: 10px;
+            color: var(--gray);
+        }
+
+        /* VIEW DE PASTA */
+        .folder-view {
+            display: none;
+            padding: 70px 15px 20px;
+            min-height: 100vh;
+        }
+        .folder-view.active {
+            display: block;
+        }
+        .folder-view-header {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #222;
+        }
+        .folder-view-header i {
+            margin-right: 15px;
+            color: var(--accent);
+            cursor: pointer;
+            font-size: 20px;
+        }
+        .folder-view-header h3 {
+            font-size: 18px;
+        }
+
+        .file-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        .file-item {
+            background: #111;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #222;
+            cursor: pointer;
+            position: relative;
+        }
+        .file-thumb {
+            width: 100%;
+            height: 140px;
+            background: #222;
+            position: relative;
+        }
+        .file-thumb.video::after {
+            content: '\f04b';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 40px;
+            color: var(--accent);
+            opacity: 0.8;
+        }
+        .file-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .file-info {
+            padding: 10px;
+        }
+        .file-name {
+            font-size: 11px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 5px;
+        }
+        .file-meta {
+            font-size: 10px;
+            color: var(--gray);
+            display: flex;
+            justify-content: space-between;
+        }
+        .file-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: var(--accent);
+            color: #000;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 9px;
+            font-weight: bold;
+        }
+
+        /* LISTA DE DOWNLOADS ATIVOS */
+        .active-downloads-list {
+            margin: 20px 15px;
+        }
+        .download-item {
+            background: #111;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid #222;
+        }
+        .dl-movie-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        .dl-movie-title {
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .dl-quality {
+            color: var(--accent);
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        .dl-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .status-no-internet { background: rgba(255,0,0,0.1); color: #ff4444; }
+        .status-paused { background: rgba(255,170,0,0.1); color: #ffaa00; }
+        .status-waiting { background: rgba(136,136,136,0.1); color: var(--gray); }
+        .status-downloading { background: rgba(0,242,255,0.1); color: var(--accent); }
+        .status-completed { background: rgba(0,255,136,0.1); color: #00ff88; }
+
+        .dl-progress-section {
+            margin-bottom: 15px;
+        }
+        .dl-progress-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--gray);
+            margin-bottom: 8px;
+        }
+        .dl-progress-bar {
+            height: 6px;
+            background: #222;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .dl-progress-fill {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 3px;
+            transition: width 0.3s;
+            box-shadow: 0 0 10px var(--accent);
+        }
+        .dl-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .dl-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #333;
+            background: transparent;
+            color: white;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .dl-btn.primary {
+            background: var(--accent);
+            color: #000;
+            border-color: var(--accent);
+            font-weight: bold;
+        }
+
+        /* ========== PREMIUM ========== */
+        #p-premium { padding-top: 70px; }
+        
+        .premium-hero {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+            margin: 0 15px 20px;
+            border-radius: 20px;
+            border: 1px solid var(--gold);
+        }
+        .premium-crown {
+            font-size: 60px;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 20px rgba(255,215,0,0.3));
+        }
+        .premium-price {
+            font-size: 48px;
+            font-weight: bold;
+            color: var(--gold);
+            margin: 20px 0;
+        }
+        .premium-price span {
+            font-size: 16px;
+            color: var(--gray);
+        }
+
+        /* CHECK-IN */
+        .checkin-section {
+            margin: 0 15px 20px;
+            background: #111;
+            padding: 20px;
+            border-radius: 16px;
+            border: 1px solid #222;
+        }
+        .section-title {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: var(--gold);
+        }
+        .checkin-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+        }
+        .checkin-day {
+            background: #1a1a1a;
+            padding: 10px 5px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #333;
+        }
+        .checkin-day.active {
+            background: rgba(0,242,255,0.1);
+            border-color: var(--accent);
+        }
+        .checkin-day.claimed {
+            background: rgba(0,255,136,0.1);
+            border-color: #00ff88;
+        }
+        .checkin-stars {
+            color: var(--gold);
+            font-size: 14px;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .checkin-label {
+            font-size: 9px;
+            color: var(--gray);
+        }
+
+        /* TASKS */
+        .tasks-section {
+            margin: 0 15px 20px;
+            background: #111;
+            padding: 20px;
+            border-radius: 16px;
+            border: 1px solid #222;
+        }
+        .task-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            background: #1a1a1a;
+            margin-bottom: 10px;
+            border-radius: 12px;
+            border: 1px solid #333;
+        }
+        .task-info h4 {
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+        .task-progress {
+            font-size: 11px;
+            color: var(--gray);
+        }
+        .task-reward {
+            color: var(--gold);
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        .task-btn {
+            background: var(--accent);
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .task-btn:disabled {
+            background: #333;
+            color: var(--gray);
+        }
+        .task-btn.completed {
+            background: #00ff88;
+        }
+
+        /* BENEFITS */
+        .benefits-list {
+            margin: 0 15px 20px;
+            background: #111;
+            padding: 20px;
+            border-radius: 16px;
+            border: 1px solid #222;
+        }
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #222;
+        }
+        .benefit-item:last-child { border-bottom: none; }
+        .benefit-item i {
+            color: var(--gold);
+            margin-right: 15px;
+            font-size: 20px;
+        }
+        .benefit-text h4 {
+            font-size: 14px;
+            margin-bottom: 3px;
+        }
+        .benefit-text p {
+            font-size: 12px;
+            color: var(--gray);
+        }
+
+        .subscribe-btn {
+            margin: 0 15px 20px;
+            width: calc(100% - 30px);
+            padding: 18px;
+            background: linear-gradient(135deg, var(--gold), #ffaa00);
+            color: #000;
+            border: none;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* ========== ME ========== */
+        #p-me { padding-top: 70px; }
+        
+        .me-header {
+            padding: 30px 20px;
+            text-align: center;
+            background: linear-gradient(135deg, #0a0a0a 0%, #151515 100%);
+            margin: 0 15px 20px;
+            border-radius: 20px;
+            border: 1px solid #222;
+        }
+        .me-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), #0088cc);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            margin: 0 auto 15px;
+            border: 4px solid rgba(255,255,255,0.1);
+        }
+        .me-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .me-id {
+            color: var(--gray);
+            font-size: 12px;
+        }
+
+        .me-menu {
+            margin: 0 15px;
+        }
+        .me-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 20px;
+            background: #111;
+            margin-bottom: 10px;
+            border-radius: 12px;
+            border: 1px solid #222;
+            cursor: pointer;
+        }
+        .me-item:active {
+            background: #1a1a1a;
+        }
+        .me-item-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .me-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(0,242,255,0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+        }
+        .me-text h4 {
+            font-size: 14px;
+            margin-bottom: 3px;
+        }
+        .me-text p {
+            font-size: 11px;
+            color: var(--gray);
+        }
+        .switch {
+            width: 50px;
+            height: 26px;
+            background: #333;
+            border-radius: 13px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .switch.active {
+            background: var(--accent);
+        }
+        .switch::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+        .switch.active::after {
+            left: 27px;
+        }
+
+        .me-footer {
+            text-align: center;
+            padding: 30px;
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        /* PLAYER */
+        #player {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 3000;
+            display: none;
+            flex-direction: column;
+        }
+        .player-header {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .video-area {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .play-btn-large {
+            font-size: 80px;
+            color: var(--accent);
+            cursor: pointer;
+        }
+
+        /* NAVBAR LIMPA */
+        nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: 75px;
+            background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid #222;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 2000;
+        }
+        .nav-link {
+            text-align: center;
+            font-size: 11px;
+            color: #555;
+            cursor: pointer;
+            padding: 10px;
+            transition: all 0.3s;
+        }
+        .nav-link.active {
+            color: var(--accent);
+        }
+        .nav-link i {
+            font-size: 22px;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
     <header>
         <img src="https://i.ibb.co/XZpqHLfz/1000007315.jpg" class="logo-img">
-        <div class="search-container">
-            <input type="text" placeholder="Filmes, Séries, Anime...">
+        <div class="search-box">
+            <input type="text" placeholder="Procurar filmes, séries..." id="searchInput">
             <i class="fas fa-search" style="color:var(--accent)"></i>
         </div>
     </header>
 
-    <div id="page-home" class="page active">
-        <div class="hero" style="background-image: url('https://image.tmdb.org/t/p/original/A7ezFmB0m9PSTp6R61v6YI0uORr.jpg')">
-            <div class="hero-meta"><h2>The Beekeeper</h2><p>2025 Action ⬇️</p></div>
-        </div>
-        <div id="home-categories"></div>
-    </div>
-
-    <div id="page-dl" class="page">
-        <div class="dl-content">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <b style="font-size: 1.1rem;">Downloads (2)</b>
-                <i class="fas fa-bars"></i>
-            </div>
-            <div class="dl-status-card">
-                <div style="display:flex; justify-content:space-between; font-size:13px">
-                    <span>Beekeeper 360p</span><span style="color:#ff3b30; font-weight: bold;">No internet</span>
-                </div>
-                <div class="dl-progress-bg"><div class="dl-progress-fill"></div></div>
-                <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-dim)">
-                    <span>92.5MB / 858.3MB</span><span style="color:var(--accent)">Pause</span>
+    <!-- ========== HOME ========== -->
+    <div id="p-home" class="page active">
+        <div class="hero-slider" id="heroSlider">
+            <div class="hero-slide active" style="background-image: url('https://image.tmdb.org/t/p/original/A7ezFmB0m9PSTp6R61v6YI0uORr.jpg');" onclick="playMovie('The Beekeeper')">
+                <div class="hero-info">
+                    <h1 class="hero-title">The Beekeeper</h1>
+                    <div class="hero-meta">
+                        <span class="hero-year">2025</span>
+                        <span class="hero-badge"><i class="fas fa-star" style="color:var(--gold)"></i> 4.5</span>
+                        <span>Action • Thriller</span>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="folder-grid">
-            <div class="folder-item"><i class="fas fa-folder"></i><br>1 BRM</div>
-            <div class="folder-item"><i class="fas fa-mobile-alt"></i><br>2 Local</div>
-            <div class="folder-item"><i class="fas fa-share-alt"></i><br>3 Receive</div>
-        </div>
-    </div>
-
-    <div id="page-premium" class="page">
-        <div class="premium-box">
-            <div class="star-points">⭐ 148 Pontos</div>
-            <h3>BRM Premium Club</h3>
-            <p style="font-size:11px; color:var(--text-dim); margin-top:5px">Ganhe estrelas completando tarefas diárias</p>
-        </div>
-        <div class="task-item">
-            <div><b>Check-in Diário</b><br><small style="color:var(--accent)">⭐ +2 estrelas hoje</small></div>
-            <button class="task-btn">Check</button>
-        </div>
-        <div class="task-item">
-            <div><b>Assista 30 min</b><br><small>Progresso: 5 / 30 min</small></div>
-            <button class="task-btn">Watch</button>
-        </div>
-    </div>
-
-    <div id="page-me" class="page">
-        <div style="padding:20px">
-            <div style="display:flex; align-items:center; margin-bottom:30px">
-                <div style="width:60px; height:60px; border-radius:50%; background:#222; border:2px solid var(--accent); margin-right:15px"></div>
-                <div><h2 style="margin:0">Soraia Manuel</h2><p style="color:var(--text-dim); font-size:12px">ID: 526097803</p></div>
+            <div class="hero-slide" style="background-image: url('https://image.tmdb.org/t/p/original/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg');" onclick="playMovie('Avatar 3')">
+                <div class="hero-info">
+                    <h1 class="hero-title">Avatar 3</h1>
+                    <div class="hero-meta">
+                        <span class="hero-year">2026</span>
+                        <span class="hero-badge"><i class="fas fa-star" style="color:var(--gold)"></i> 4.8</span>
+                        <span>Sci-Fi • Adventure</span>
+                    </div>
+                </div>
             </div>
-            <div style="line-height:3.5; border-top:1px solid #111">
-                <div style="display:flex; justify-content:space-between"><span>Modo Família</span><i class="fas fa-toggle-on" style="color:var(--accent); font-size:1.3rem"></i></div>
-                <div><i class="fas fa-bookmark" style="margin-right:10px"></i> Minha Lista 🔖</div>
-                <div><i class="fas fa-history" style="margin-right:10px"></i> Histórico 👀</div>
-                <div style="text-align:center; color:var(--accent); margin-top:30px; font-weight:bold">Official Web: BRM.Ph</div>
+            <div class="hero-slide" style="background-image: url('https://image.tmdb.org/t/p/original/geCR7m9vZx8PZ7p2P3pODC6hqoX.jpg');" onclick="playMovie('Solo Leveling')">
+                <div class="hero-info">
+                    <h1 class="hero-title">Solo Leveling</h1>
+                    <div class="hero-meta">
+                        <span class="hero-year">2024</span>
+                        <span class="hero-badge"><i class="fas fa-star" style="color:var(--gold)"></i> 4.9</span>
+                        <span>Anime • Action</span>
+                    </div>
+                </div>
             </div>
+            <div class="hero-slide" style="background-image: url('https://image.tmdb.org/t/p/original/1pdfLvkbY9ohJlCjQH2CZjjYVv.jpg');" onclick="playMovie('Dune: Part Two')">
+                <div class="hero-info">
+                    <h1 class="hero-title">Dune: Part Two</h1>
+                    <div class="hero-meta">
+                        <span class="hero-year">2024</span>
+                        <span class="hero-badge"><i class="fas fa-star" style="color:var(--gold)"></i> 4.7</span>
+                        <span>Sci-Fi • Epic</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-slide" style="background-image: url('https://image.tmdb.org/t/p/original/8cdWjvZQUExUUTzyp4t6ESnRSP.jpg');" onclick="playMovie('Deadpool & Wolverine')">
+                <div class="hero-info">
+                    <h1 class="hero-title">Deadpool & Wolverine</h1>
+                    <div class="hero-meta">
+                        <span class="hero-year">2024</span>
+                        <span class="hero-badge"><i class="fas fa-star" style="color:var(--gold)"></i> 4.6</span>
+                        <span>Action • Comedy</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slider-dots">
+                <span class="dot active" onclick="goToSlide(0)"></span>
+                <span class="dot" onclick="goToSlide(1)"></span>
+                <span class="dot" onclick="goToSlide(2)"></span>
+                <span class="dot" onclick="goToSlide(3)"></span>
+                <span class="dot" onclick="goToSlide(4)"></span>
+            </div>
+        </div>
+
+        <div class="categories-section" id="categoriesContainer"></div>
+    </div>
+
+    <!-- ========== DOWNLOADS ========== -->
+    <div id="p-dl" class="page">
+        
+        <!-- VIEW PRINCIPAL -->
+        <div id="dl-main-view">
+            <div class="dl-header">
+                <h2>Downloads</h2>
+                <span class="dl-count-badge" id="totalDownloads">2</span>
+            </div>
+
+            <div class="ad-banner" id="adBanner">
+                <i class="fas fa-ad"></i> Anúncio - Assine Premium para remover
+            </div>
+
+            <!-- PASTAS -->
+            <div class="folder-section">
+                <div class="folder-grid">
+                    <div class="folder-item" onclick="openBRMFolder()">
+                        <i class="fas fa-folder"></i>
+                        <div class="folder-name">BRM</div>
+                        <div class="folder-count" id="brmCount">3 itens</div>
+                    </div>
+                    <div class="folder-item" onclick="openLocalFolder()">
+                        <i class="fas fa-mobile-alt"></i>
+                        <div class="folder-name">Local</div>
+                        <div class="folder-count" id="localCount">8 itens</div>
+                    </div>
+                    <div class="folder-item" onclick="openReceiveFolder()">
+                        <i class="fas fa-share-alt"></i>
+                        <div class="folder-name">Receive</div>
+                        <div class="folder-count" id="receiveCount">0 itens</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DOWNLOADS ATIVOS -->
+            <div class="active-downloads-list">
+                <h3 style="margin-bottom:15px; font-size:16px;">Em andamento</h3>
+                
+                <div class="download-item">
+                    <div class="dl-movie-header">
+                        <div>
+                            <div class="dl-movie-title">Beekeeper</div>
+                            <div class="dl-quality">360p • MP4</div>
+                        </div>
+                        <span class="dl-status status-no-internet" id="status1">No Internet</span>
+                    </div>
+                    <div class="dl-progress-section">
+                        <div class="dl-progress-info">
+                            <span>92.5 MB / 858.3 MB</span>
+                            <span id="percent1">11%</span>
+                        </div>
+                        <div class="dl-progress-bar">
+                            <div class="dl-progress-fill" id="progress1" style="width:11%"></div>
+                        </div>
+                    </div>
+                    <div class="dl-actions">
+                        <button class="dl-btn" onclick="togglePause(1)">
+                            <i class="fas fa-pause"></i> <span id="pauseText1">Pause</span>
+                        </button>
+                        <button class="dl-btn primary" onclick="resumeDownload(1)">
+                            <i class="fas fa-play"></i> Resume
+                        </button>
+                    </div>
+                </div>
+
+                <div class="download-item">
+                    <div class="dl-movie-header">
+                        <div>
+                            <div class="dl-movie-title">Solo Leveling EP1</div>
+                            <div class="dl-quality">720p • MKV</div>
+                        </div>
+                        <span class="dl-status status-waiting" id="status2">Waiting</span>
+                    </div>
+                    <div class="dl-progress-section">
+                        <div class="dl-progress-info">
+                            <span>0 MB / 450.2 MB</span>
+                            <span id="percent2">0%</span>
+                        </div>
+                        <div class="dl-progress-bar">
+                            <div class="dl-progress-fill" id="progress2" style="width:0%"></div>
+                        </div>
+                    </div>
+                    <div class="dl-actions">
+                        <button class="dl-btn" onclick="togglePause(2)">
+                            <i class="fas fa-pause"></i> <span id="pauseText2">Pause</span>
+                        </button>
+                        <button class="dl-btn primary" onclick="resumeDownload(2)">
+                            <i class="fas fa-play"></i> Resume
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PASTA BRM -->
+        <div id="brm-folder" class="folder-view">
+            <div class="folder-view-header">
+                <i class="fas fa-arrow-left" onclick="backToMain()"></i>
+                <h3>BRM</h3>
+            </div>
+            <div class="file-grid" id="brmContent"></div>
+        </div>
+
+        <!-- PASTA LOCAL -->
+        <div id="local-folder" class="folder-view">
+            <div class="folder-view-header">
+                <i class="fas fa-arrow-left" onclick="backToMain()"></i>
+                <h3>Local</h3>
+            </div>
+            <div class="file-grid" id="localContent"></div>
+        </div>
+
+        <!-- PASTA RECEIVE -->
+        <div id="receive-folder" class="folder-view">
+            <div class="folder-view-header">
+                <i class="fas fa-arrow-left" onclick="backToMain()"></i>
+                <h3>Receive</h3>
+            </div>
+            <div class="file-grid" id="receiveContent"></div>
+        </div>
+
+    </div>
+
+    <!-- ========== PREMIUM ========== -->
+    <div id="p-premium" class="page">
+        <div class="premium-hero">
+            <div class="premium-crown">👑</div>
+            <h2>BRM Pro Max Premium</h2>
+            <p style="color:var(--gray); margin:10px 0;">Desbloqueie todo o potencial</p>
+            <div class="premium-price">R$ 19,90<span>/mês</span></div>
+        </div>
+
+        <!-- CHECK-IN DIÁRIO -->
+        <div class="checkin-section">
+            <div class="section-title">Check-in Daily</div>
+            <div class="checkin-grid">
+                <div class="checkin-day claimed">
+                    <span class="checkin-stars">✓</span>
+                    <span class="checkin-label">Day 1</span>
+                </div>
+                <div class="checkin-day active" onclick="claimDay(this, 2)">
+                    <span class="checkin-stars">⭐+2</span>
+                    <span class="checkin-label">Day 2</span>
+                </div>
+                <div class="checkin-day" onclick="claimDay(this, 2)">
+                    <span class="checkin-stars">⭐+2</span>
+                    <span class="checkin-label">Day 3</span>
+                </div>
+                <div class="checkin-day" onclick="claimDay(this, 2)">
+                    <span class="checkin-stars">⭐+2</span>
+                    <span class="checkin-label">Day 4</span>
+                </div>
+                <div class="checkin-day" onclick="claimDay(this, 2)">
+                    <span class="checkin-stars">⭐+2</span>
+                    <span class="checkin-label">Day 5</span>
+                </div>
+                <div class="checkin-day" onclick="claimDay(this, 2)">
+                    <span class="checkin-stars">⭐+2</span>
+                    <span class="checkin-label">Day 6</span>
+                </div>
+                <div class="checkin-day" onclick="claimDay(this, 5)">
+                    <span class="checkin-stars">⭐+5</span>
+                    <span class="checkin-label">Day 7</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- WATCH AND EARN -->
+        <div class="tasks-section">
+            <div class="section-title">Watch and Earn</div>
+            
+            <div class="task-item">
+                <div class="task-info">
+                    <h4>Video time reaches 30mins</h4>
+                    <div class="task-progress">Progress: 5/30 mins</div>
+                    <div class="task-reward">⭐ +1</div>
+                </div>
+                <button class="task-btn" onclick="completeTask(this)">Watch</button>
+            </div>
+
+            <div class="task-item">
+                <div class="task-info">
+                    <h4>Video time reaches 60mins</h4>
+                    <div class="task-progress">Progress: 5/60 mins</div>
+                    <div class="task-reward">⭐ +1</div>
+                </div>
+                <button class="task-btn" onclick="completeTask(this)">Watch</button>
+            </div>
+
+            <div class="task-item">
+                <div class="task-info">
+                    <h4>Video time reaches 90mins</h4>
+                    <div class="task-progress">Progress: 5/90 mins</div>
+                    <div class="task-reward">⭐ +1</div>
+                </div>
+                <button class="task-btn" onclick="completeTask(this)">Watch</button>
+            </div>
+
+            <div class="task-item">
+                <div class="task-info">
+                    <h4>Video time reaches 120mins</h4>
+                    <div class="task-progress">Progress: 5/120 mins</div>
+                    <div class="task-reward">⭐ +1</div>
+                </div>
+                <button class="task-btn" onclick="completeTask(this)">Watch</button>
+            </div>
+
+            <div class="task-item">
+                <div class="task-info">
+                    <h4>Video time reaches 150mins</h4>
+                    <div class="task-progress">Progress: 5/150 mins</div>
+                    <div class="task-reward">⭐ +1</div>
+                </div>
+                <button class="task-btn" onclick="completeTask(this)">Watch</button>
+            </div>
+        </div>
+
+        <!-- PLAY AND EARN -->
+        <div class="tasks-section">
+            <div class="section-title">Play and Earn</div>
+            <div class="task-item">
+                <div class="task-info">
+                    <h4>Play each game 30+ seconds</h4>
+                    <div class="task-progress">Mini games disponíveis</div>
+                    <div class="task-reward">⭐ +1</div>
+                </div>
+                <button class="task-btn" onclick="completeTask(this)">Play</button>
+            </div>
+        </div>
+
+        <!-- BENEFÍCIOS -->
+        <div class="benefits-list">
+            <div class="section-title">Benefícios Premium</div>
+            <div class="benefit-item">
+                <i class="fas fa-check-circle"></i>
+                <div class="benefit-text">
+                    <h4>Sem Anúncios</h4>
+                    <p>Assista sem interrupções</p>
+                </div>
+            </div>
+            <div class="benefit-item">
+                <i class="fas fa-check-circle"></i>
+                <div class="benefit-text">
+                    <h4>Qualidade 4K</h4>
+                    <p>Resolução ultra HD</p>
+                </div>
+            </div>
+            <div class="benefit-item">
+                <i class="fas fa-check-circle"></i>
+                <div class="benefit-text">
+                    <h4>Downloads Ilimitados</h4>
+                    <p>Baixe quantos quiser</p>
+                </div>
+            </div>
+            <div class="benefit-item">
+                <i class="fas fa-check-circle"></i>
+                <div class="benefit-text">
+                    <h4>4 Telas Simultâneas</h4>
+                    <p>Compartilhe com a família</p>
+                </div>
+            </div>
+        </div>
+
+        <button class="subscribe-btn" onclick="subscribePremium()">
+            ASSINAR AGORA
+        </button>
+    </div>
+
+    <!-- ========== ME ========== -->
+    <div id="p-me" class="page">
+        <div class="me-header">
+            <div class="me-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="me-name" id="meName">Soraia Manuel</div>
+            <div class="me-id">ID: 526097803</div>
+        </div>
+
+        <div class="me-menu">
+            <div class="me-item" onclick="toggleFamily()">
+                <div class="me-item-left">
+                    <div class="me-icon"><i class="fas fa-users"></i></div>
+                    <div class="me-text">
+                        <h4>Modo Família</h4>
+                        <p>Controle parental</p>
+                    </div>
+                </div>
+                <div class="switch" id="familySwitch"></div>
+            </div>
+
+            <div class="me-item" onclick="openMyList()">
+                <div class="me-item-left">
+                    <div class="me-icon"><i class="fas fa-bookmark"></i></div>
+                    <div class="me-text">
+                        <h4>Minha Lista</h4>
+                        <p>Filmes e séries salvos</p>
+                    </div>
+                </div>
+                <i class="fas fa-chevron-right" style="color:var(--gray)"></i>
+            </div>
+
+            <div class="me-item" onclick="openHistory()">
+                <div class="me-item-left">
+                    <div class="me-icon"><i class="fas fa-history"></i></div>
+                    <div class="me-text">
+                        <h4>Histórico</h4>
+                        <p>Últimos assistidos</p>
+                    </div>
+                </div>
+                <i class="fas fa-chevron-right" style="color:var(--gray)"></i>
+            </div>
+
+            <div class="me-item" onclick="openLiked()">
+                <div class="me-item-left">
+                    <div class="me-icon"><i class="fas fa-heart"></i></div>
+                    <div class="me-text">
+                        <h4>Meus Curtidos</h4>
+                        <p>Conteúdos favoritos</p>
+                    </div>
+                </div>
+                <i class="fas fa-chevron-right" style="color:var(--gray)"></i>
+            </div>
+
+            <div class="me-item" onclick="openComments()">
+                <div class="me-item-left">
+                    <div class="me-icon"><i class="fas fa-comment"></i></div>
+                    <div class="me-text">
+                        <h4>Comentários</h4>
+                        <p>Suas avaliações</p>
+                    </div>
+                </div>
+                <i class="fas fa-chevron-right" style="color:var(--gray)"></i>
+            </div>
+
+            <div class="me-item" onclick="editProfile()">
+                <div class="me-item-left">
+                    <div class="me-icon"><i class="fas fa-user-edit"></i></div>
+                    <div class="me-text">
+                        <h4>Editar Perfil</h4>
+                        <p>Alterar nome e foto</p>
+                    </div>
+                </div>
+                <i class="fas fa-chevron-right" style="color:var(--gray)"></i>
+            </div>
+
+            <div class="me-item" onclick="appSettings()">
+                <div class="me-item-left">
+                    <div class="me-icon"><i class="fas fa-cog"></i></div>
+                    <div class="me-text">
+                        <h4>Configurações</h4>
+                        <p>Idioma, qualidade, notificações</p>
+                    </div>
+                </div>
+                <i class="fas fa-chevron-right" style="color:var(--gray)"></i>
+            </div>
+
+            <div class="me-item" onclick="logout()" style="margin-top:20px;">
+                <div class="me-item-left">
+                    <div class="me-icon" style="background:rgba(255,0,0,0.1); color:#ff4444;"><i class="fas fa-sign-out-alt"></i></div>
+                    <div class="me-text">
+                        <h4 style="color:#ff4444;">Sair da Conta</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="me-footer">Official Web: BRM.Ph</div>
+    </div>
+
+    <!-- PLAYER -->
+    <div id="player">
+        <div class="player-header">
+            <i class="fas fa-arrow-left" onclick="closePlayer()" style="cursor:pointer;"></i>
+            <span id="playerTitle">Movie</span>
+            <i class="fas fa-ellipsis-v"></i>
+        </div>
+        <div class="video-area">
+            <i class="fas fa-play-circle play-btn-large" onclick="startPlayback()"></i>
         </div>
     </div>
 
+    <!-- NAVBAR LIMPA -->
     <nav>
-        <div class="nav-link active" onclick="switchPage('page-home')"><i class="fas fa-globe"></i>Home 🌐</div>
-        <div class="nav-link" onclick="switchPage('page-dl')"><i class="fas fa-bolt"></i>Downloads ⚡</div>
-        <div class="nav-link" onclick="switchPage('page-premium')"><i class="fas fa-trophy"></i>Premium 🏆</div>
-        <div class="nav-link" onclick="switchPage('page-me')"><i class="fas fa-user-astronaut"></i>Me 🗽</div>
+        <div class="nav-link active" onclick="nav('p-home', this)">
+            <i class="fas fa-globe"></i>
+            Home
+        </div>
+        <div class="nav-link" onclick="nav('p-dl', this)">
+            <i class="fas fa-bolt"></i>
+            Downloads
+        </div>
+        <div class="nav-link" onclick="nav('p-premium', this)">
+            <i class="fas fa-trophy"></i>
+            Premium
+        </div>
+        <div class="nav-link" onclick="nav('p-me', this)">
+            <i class="fas fa-user-astronaut"></i>
+            Me
+        </div>
     </nav>
 
     <script>
-        // Gerador de Categorias
-        const list = ["Séries TV", "Anime", "D-Dorama", "K-Dorama", "Cartoon", "USA Movies", "Cinema 2026", "Terror", "Músicas"];
-        const cont = document.getElementById('home-categories');
-        list.forEach(c => {
-            cont.innerHTML += `
-                <div class="category-group">
-                    <div class="category-title">${c}</div>
-                    <div class="movie-row">${'<div class="movie-thumb"></div>'.repeat(6)}</div>
-                </div>`;
+        // ========== DADOS ==========
+        const categories = [
+            { name: 'Filmes', movies: [
+                {t: 'Dune: Part Two', img: 'https://image.tmdb.org/t/p/w200/1pdfLvkbY9ohJlCjQH2CZjjYVv.jpg', r: '4.7'},
+                {t: 'Deadpool 3', img: 'https://image.tmdb.org/t/p/w200/8cdWjvZQUExUUTzyp4t6ESnRSP.jpg', r: '4.6'},
+                {t: 'The Batman', img: 'https://image.tmdb.org/t/p/w200/74xTEgt7R36FpoooUf7ozSJc8G.jpg', r: '4.5'},
+                {t: 'Oppenheimer', img: 'https://image.tmdb.org/t/p/w200/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg', r: '4.8'}
+            ]},
+            { name: 'Séries TV', movies: [
+                {t: 'Stranger Things', img: 'https://image.tmdb.org/t/p/w200/49WJfeN0moxb9IPfGn8AI0MVOlD.jpg', r: '4.6'},
+                {t: 'The Boys', img: 'https://image.tmdb.org/t/p/w200/mY7SeH4HFFxW1hI76Yt8czZEBOC.jpg', r: '4.7'},
+                {t: 'Breaking Bad', img: 'https://image.tmdb.org/t/p/w200/ggFHVNu6YYI5L9pCfOacjizRGt.jpg', r: '4.9'},
+                {t: 'Game of Thrones', img: 'https://image.tmdb.org/t/p/w200/u3bZgnGQ9T01sWNhyveQz0wH0Hl.jpg', r: '4.5'}
+            ]},
+            { name: 'Anime', movies: [
+                {t: 'Solo Leveling', img: 'https://image.tmdb.org/t/p/w200/geCR7m9vZx8PZ7p2P3pODC6hqoX.jpg', r: '4.9'},
+                {t: 'Demon Slayer', img: 'https://image.tmdb.org/t/p/w200/xUf9S88p9PSTp6R61v6YI0uORr.jpg', r: '4.8'},
+                {t: 'Attack on Titan', img: 'https://image.tmdb.org/t/p/w200/hTP1DtLGFamfuWY8H8gOGX6H4G.jpg', r: '4.9'},
+                {t: 'Jujutsu Kaisen', img: 'https://image.tmdb.org/t/p/w200/fHpKWq9ayzSk8nSwqRJWaukUPXc.jpg', r: '4.7'}
+            ]},
+            { name: 'K-Dorama', movies: [
+                {t: 'Squid Game', img: 'https://image.tmdb.org/t/p/w200/dDlEmu3EZ0Pgg93KZ7O8pE7rJ4.jpg', r: '4.6'},
+                {t: 'The Glory', img: 'https://image.tmdb.org/t/p/w200/6JpUveYVvcl8Sj58vT62vU7U6Uv.jpg', r: '4.5'},
+                {t: 'All of Us Are Dead', img: 'https://image.tmdb.org/t/p/w200/pTg8SfP7pKmQfaA5DxTcDSnOGp.jpg', r: '4.3'}
+            ]},
+            { name: 'Terror', movies: [
+                {t: 'The Conjuring', img: 'https://image.tmdb.org/t/p/w200/wVYREutTvI2tmxr6ujr7p966h6.jpg', r: '4.3'},
+                {t: 'Hereditary', img: 'https://image.tmdb.org/t/p/w200/lHV8HHlhwNup2Vb8s8B5n4t4D.jpg', r: '4.2'}
+            ]},
+            { name: 'Músicas', movies: [
+                {t: 'Bohemian Rhapsody', img: 'https://image.tmdb.org/t/p/w200/lHu1wtNaczFPGFDTrjCSzeLPTKN.jpg', r: '4.6'},
+                {t: 'Whiplash', img: 'https://image.tmdb.org/t/p/w200/lIv1QinR7c4KfBnQUaXTmF0T9x.jpg', r: '4.7'}
+            ]}
+        ];
+
+        // ========== HOME ==========
+        const catContainer = document.getElementById('categoriesContainer');
+        categories.forEach(cat => {
+            let moviesHtml = '';
+            cat.movies.forEach(m => {
+                moviesHtml += `
+                    <div class="movie-card" onclick="playMovie('${m.t}')">
+                        <img src="${m.img}" alt="${m.t}">
+                        <span class="movie-rating"><i class="fas fa-star"></i> ${m.r}</span>
+                        <div class="movie-overlay">
+                            <div class="movie-title">${m.t}</div>
+                        </div>
+                    </div>
+                `;
+            });
+            catContainer.innerHTML += `
+                <div class="cat-header">
+                    <span class="cat-name">${cat.name}</span>
+                    <span class="cat-more">Ver todos <i class="fas fa-chevron-right"></i></span>
+                </div>
+                <div class="movies-row">${moviesHtml}</div>
+            `;
         });
 
-        // Função de Navegação
-        function switchPage(id) {
+        // Slider
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.hero-slide');
+        const dots = document.querySelectorAll('.dot');
+
+        function goToSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            dots[currentSlide].classList.remove('active');
+            currentSlide = n;
+            slides[currentSlide].classList.add('active');
+            dots[currentSlide].classList.add('active');
+        }
+
+        setInterval(() => {
+            goToSlide((currentSlide + 1) % slides.length);
+        }, 3000);
+
+        // ========== DOWNLOADS ==========
+        
+        // Dados das pastas
+        const brmFiles = [
+            {name: 'Beekeeper', size: '858.3 MB', quality: '360p', progress: 12},
+            {name: 'Solo Leveling EP1', size: '450.2 MB', quality: '720p', progress: 100},
+            {name: 'Demon Slayer', size: '1.2 GB', quality: '1080p', progress: 100}
+        ];
+
+        const localFiles = [
+            {name: 'VID_20250115_143022', size: '45.2 MB', duration: '2:34'},
+            {name: 'Como Treinar Seu Dragão', size: '1.8 GB', duration: '1:38:22'},
+            {name: 'Show da Luna EP12', size: '280.5 MB', duration: '22:15'},
+            {name: 'Viagem para SP', size: '125.8 MB', duration: '5:47'},
+            {name: 'Aniversario_Maria', size: '890.3 MB', duration: '45:20'},
+            {name: 'TikTok_Video_123', size: '15.4 MB', duration: '0:45'},
+            {name: 'Aula de Pilates', size: '234.1 MB', duration: '58:30'},
+            {name: 'Receita de Bolo', size: '12.8 MB', duration: '3:22'}
+        ];
+
+        const receiveFiles = [];
+
+        function openBRMFolder() {
+            document.getElementById('dl-main-view').style.display = 'none';
+            document.getElementById('brm-folder').classList.add('active');
+            
+            const container = document.getElementById('brmContent');
+            container.innerHTML = brmFiles.map(f => `
+                <div class="file-item" onclick="playMovie('${f.name}')">
+                    <div class="file-thumb video"></div>
+                    <div class="file-info">
+                        <div class="file-name">${f.name}</div>
+                        <div class="file-meta">
+                            <span style="color:var(--accent)">${f.size}</span>
+                            <span>${f.quality}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openLocalFolder() {
+            document.getElementById('dl-main-view').style.display = 'none';
+            document.getElementById('local-folder').classList.add('active');
+            
+            const container = document.getElementById('localContent');
+            container.innerHTML = localFiles.map(f => `
+                <div class="file-item" onclick="playMovie('${f.name}')">
+                    <div class="file-thumb video"></div>
+                    <div class="file-info">
+                        <div class="file-name">${f.name}</div>
+                        <div class="file-meta">
+                            <span style="color:var(--accent)">${f.size}</span>
+                            <span>${f.duration}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openReceiveFolder() {
+            document.getElementById('dl-main-view').style.display = 'none';
+            document.getElementById('receive-folder').classList.add('active');
+            
+            const container = document.getElementById('receiveContent');
+            if (receiveFiles.length === 0) {
+                container.innerHTML = `
+                    <div style="grid-column:1/-1; text-align:center; padding:60px 20px; color:var(--gray);">
+                        <i class="fas fa-share-alt" style="font-size:48px; margin-bottom:15px; opacity:0.3;"></i>
+                        <p>Nenhuma transferência recebida</p>
+                        <p style="font-size:11px; margin-top:10px;">Compartilhe arquivos de outros apps para o BRM</p>
+                    </div>
+                `;
+            }
+        }
+
+        function backToMain() {
+            document.querySelectorAll('.folder-view').forEach(v => v.classList.remove('active'));
+            document.getElementById('dl-main-view').style.display = 'block';
+        }
+
+        function togglePause(id) {
+            const status = document.getElementById(`status${id}`);
+            const btnText = document.getElementById(`pauseText${id}`);
+            
+            if (status.innerText === 'Paused') {
+                status.innerText = 'No Internet';
+                status.className = 'dl-status status-no-internet';
+                btnText.innerText = 'Pause';
+            } else {
+                status.innerText = 'Paused';
+                status.className = 'dl-status status-paused';
+                btnText.innerText = 'Resume';
+            }
+        }
+
+        function resumeDownload(id) {
+            const status = document.getElementById(`status${id}`);
+            const progress = document.getElementById(`progress${id}`);
+            const percent = document.getElementById(`percent${id}`);
+            
+            status.innerText = 'Downloading...';
+            status.className = 'dl-status status-downloading';
+            
+            let width = parseInt(progress.style.width);
+            const interval = setInterval(() => {
+                if (width >= 100) {
+                    clearInterval(interval);
+                    status.innerText = 'Completed';
+                    status.className = 'dl-status status-completed';
+                } else {
+                    width++;
+                    progress.style.width = width + '%';
+                    percent.innerText = width + '%';
+                }
+            }, 100);
+        }
+
+        // ========== PREMIUM ==========
+        function claimDay(el, stars) {
+            el.classList.remove('active');
+            el.classList.add('claimed');
+            el.querySelector('.checkin-stars').innerText = '✓';
+        }
+
+        function completeTask(btn) {
+            btn.innerText = '✓ Done';
+            btn.classList.add('completed');
+            btn.disabled = true;
+        }
+
+        function subscribePremium() {
+            // Sem confirmação, executa direto
+            alert('Assinatura ativada!');
+        }
+
+        // ========== ME ==========
+        function toggleFamily() {
+            document.getElementById('familySwitch').classList.toggle('active');
+        }
+
+        function openMyList() {
+            // Executa sem confirmação
+        }
+
+        function openHistory() {
+            // Executa sem confirmação
+        }
+
+        function openLiked() {
+            // Executa sem confirmação
+        }
+
+        function openComments() {
+            // Executa sem confirmação
+        }
+
+        function editProfile() {
+            const newName = prompt('Novo nome:', 'Soraia Manuel');
+            if (newName) {
+                document.getElementById('meName').innerText = newName;
+            }
+        }
+
+        function appSettings() {
+            // Executa sem confirmação
+        }
+
+        function logout() {
+            // Executa sem confirmação, apenas ação
+            window.location.reload();
+        }
+
+        // ========== PLAYER ==========
+        function playMovie(title) {
+            document.getElementById('playerTitle').innerText = title;
+            document.getElementById('player').style.display = 'flex';
+        }
+
+        function closePlayer() {
+            document.getElementById('player').style.display = 'none';
+        }
+
+        function startPlayback() {
+            document.querySelector('.play-btn-large').style.display = 'none';
+        }
+
+        // ========== NAV ==========
+        function nav(pageId, el) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            event.currentTarget.classList.add('active');
+            document.getElementById(pageId).classList.add('active');
+            if(el) el.classList.add('active');
+        }
+
+        // ========== SEARCH ==========
+        document.getElementById('searchInput').addEventListener('keyup', (e) => {
+            if(e.key === 'Enter') {
+                // Executa busca sem confirmação
+            }
+        });
+
+        // Verificar conexão
+        window.addEventListener('online', () => {
+            document.getElementById('adBanner').classList.remove('show');
+        });
+        window.addEventListener('offline', () => {
+            document.getElementById('adBanner').classList.add('show');
+        });
+
+        if(!navigator.onLine) {
+            document.getElementById('adBanner').classList.add('show');
         }
     </script>
 </body>
